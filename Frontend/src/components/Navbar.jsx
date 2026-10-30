@@ -39,10 +39,16 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Right Actions: Primary CTA */}
-          <div className="hidden md:flex items-center gap-5">
+          {/* Right Actions: Log In & Primary CTA */}
+          <div className="hidden md:flex items-center gap-3">
             <a
-              href="#start"
+              href="#login"
+              className="px-4 py-2 text-sm font-semibold text-[#5A554E] hover:text-[#2D2D2D] hover:bg-[#EFECE6]/60 rounded-full transition-colors"
+            >
+              Log in
+            </a>
+            <a
+              href="#signup"
               className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] active:scale-[0.98] transition-all shadow-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F46200]"
             >
               Build my CV
@@ -79,9 +85,16 @@ export default function Navbar() {
               </a>
             ))}
           </nav>
-          <div className="pt-2">
+          <div className="pt-2 flex flex-col gap-2.5">
             <a
-              href="#start"
+              href="#login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full inline-flex items-center justify-center py-2.5 rounded-full text-sm font-semibold text-[#2D2D2D] border border-[#E7E2D8] bg-white hover:bg-[#FAF8F4] transition-colors"
+            >
+              Log in
+            </a>
+            <a
+              href="#signup"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full inline-flex items-center justify-center py-3 rounded-full text-sm font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] transition-colors"
             >
