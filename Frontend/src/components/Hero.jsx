@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Check, Sparkles, Download, ArrowDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Hero() {
   const [aiAccepted, setAiAccepted] = useState(true);
@@ -24,13 +25,13 @@ export default function Hero() {
 
             {/* Actions: Primary CTA + Secondary Link */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-10">
-              <a
-                href="#signup"
+              <Link
+                to="/app/builder/guest"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-base font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] active:scale-[0.99] transition-all shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F46200]"
               >
                 <span>Build my CV for free</span>
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </Link>
 
               <a
                 href="#how-it-works"
@@ -98,64 +99,64 @@ export default function Hero() {
                   <p className="text-xs text-[#5A554E]">B.S. in Computer Science · GPA: 3.7 / 4.0</p>
                 </div>
 
-                {/* CV Experience with LIVE AI Suggestion */}
+                {/* CV Experience with interactive AI highlight */}
                 <div className="mb-5">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-[#2D2D2D] mb-1.5">
-                    Experience & Projects
+                    Experience
                   </h3>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="font-semibold text-[#2D2D2D]">Frontend Intern · Cadence Tech Studio</span>
-                    <span className="text-[#8A847C]">2025</span>
+                  <div className="flex justify-between text-xs">
+                    <span className="font-semibold text-[#2D2D2D]">Frontend Developer Intern</span>
+                    <span className="text-[#8A847C]">2024</span>
                   </div>
+                  <p className="text-xs text-[#8A847C] mb-2">Canadia Bank Digital Lab · Phnom Penh</p>
+                  
+                  {/* Bullet with live AI suggestion card */}
+                  <div className="relative">
+                    <p className="text-xs text-[#5A554E] leading-relaxed">
+                      {aiAccepted ? (
+                        <span>
+                          • Built and shipped 4 responsive React dashboard modules, improving mobile load times by 32% across 5,000+ branch users.
+                        </span>
+                      ) : (
+                        <span>
+                          • Worked on React dashboard components and fixed various responsive bugs for mobile staff.
+                        </span>
+                      )}
+                    </p>
 
-                  {/* Bullet Point with Interactive AI Badge */}
-                  <div className="relative mt-2 p-2.5 rounded-xl bg-[#FFF8F3] border border-[#FAD7C0] transition-all">
-                    
-                    {/* Small Header for the AI Suggestion */}
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#F46200]">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>Careerly AI Phrasing</span>
+                    {/* AI Suggestion Box */}
+                    <div className="mt-2.5 bg-[#FAF8F4] rounded-xl border border-[#E7E2D8] p-3 text-xs">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="inline-flex items-center gap-1 font-semibold text-[#F46200]">
+                          <Sparkles className="w-3.5 h-3.5" />
+                          AI English Suggestion
+                        </span>
+                        <span className="text-[10px] text-[#8A847C]">Action Verb + Metric</span>
                       </div>
+                      <p className="text-[#5A554E] text-[11px] mb-2 italic">
+                        "{aiAccepted ? "Swapped generic verb 'worked on' for strong impact phrasing: 'Built and shipped... improving mobile load times by 32%'" : "Original draft: 'Worked on React dashboard components...'"}"
+                      </p>
                       <button
                         type="button"
                         onClick={() => setAiAccepted(!aiAccepted)}
-                        className="text-[10px] font-semibold text-[#2D2D2D] underline hover:text-[#F46200]"
+                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#F46200] hover:text-[#DC5800] underline"
                       >
-                        {aiAccepted ? 'Show original' : 'Apply AI fix'}
+                        {aiAccepted ? "Revert to draft" : "Apply AI suggestion"}
                       </button>
                     </div>
-
-                    {/* Text content comparison */}
-                    {aiAccepted ? (
-                      <p className="text-xs text-[#2D2D2D] font-medium leading-relaxed">
-                        • Rebuilt client portal with React and Tailwind CSS, speeding up page load time by 34% and drafting bilingual release notes in clear English.
-                        <span className="inline-flex items-center gap-1 ml-2 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
-                          <Check className="w-3 h-3" /> Accepted
-                        </span>
-                      </p>
-                    ) : (
-                      <p className="text-xs text-[#8A847C] line-through leading-relaxed">
-                        • Made the website faster with React and wrote some English notes for clients.
-                      </p>
-                    )}
                   </div>
-
-                  <p className="text-xs text-[#5A554E] mt-2.5 leading-relaxed">
-                    • Built responsive capstone dashboard using Vite and REST APIs for campus student clubs.
-                  </p>
                 </div>
 
-                {/* CV Skills */}
+                {/* Skills Row */}
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-[#2D2D2D] mb-1.5">
                     Skills
                   </h3>
                   <div className="flex flex-wrap gap-1.5">
-                    {['React.js', 'Tailwind CSS', 'JavaScript (ES6)', 'Git / GitHub', 'Technical English'].map((skill) => (
+                    {['React', 'Tailwind CSS', 'TypeScript', 'REST APIs', 'Git', 'Khmer & English'].map((skill) => (
                       <span
                         key={skill}
-                        className="text-[11px] font-medium px-2 py-0.5 bg-[#FAF8F4] text-[#2D2D2D] rounded border border-[#E7E2D8]"
+                        className="text-[11px] px-2 py-0.5 rounded-md bg-[#FAF8F4] text-[#5A554E] border border-[#E7E2D8]"
                       >
                         {skill}
                       </span>
@@ -163,24 +164,18 @@ export default function Hero() {
                   </div>
                 </div>
 
-                {/* Floating Bottom Badge */}
-                <div className="mt-5 pt-4 border-t border-[#EFECE6] flex items-center justify-between text-xs text-[#5A554E]">
-                  <span className="flex items-center gap-1.5 font-semibold text-[#2D2D2D]">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    CV Quality Score: 94/100
-                  </span>
-                  <span className="inline-flex items-center gap-1 font-medium text-[#F46200]">
-                    <Download className="w-3.5 h-3.5" />
-                    Export PDF
-                  </span>
+                {/* Bottom floating button */}
+                <div className="mt-5 pt-4 border-t border-[#EFECE6] flex justify-between items-center text-xs">
+                  <span className="text-[#8A847C]">Template: Minimalist Clean</span>
+                  <Link
+                    to="/app/builder/guest"
+                    className="inline-flex items-center gap-1 font-semibold text-[#F46200] hover:text-[#DC5800]"
+                  >
+                    <span>Use this template</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
                 </div>
 
-              </div>
-
-              {/* Decorative warm label badge */}
-              <div className="hidden sm:flex items-center gap-2 absolute -bottom-5 -right-3 bg-[#2D2D2D] text-white px-3.5 py-2 rounded-xl text-xs font-medium shadow-md">
-                <span className="w-2 h-2 rounded-full bg-[#F46200] animate-pulse"></span>
-                <span>Live interactive HTML/CSS Preview</span>
               </div>
 
             </div>

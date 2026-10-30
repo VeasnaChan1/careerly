@@ -26,7 +26,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
         style={{ backgroundColor: "#f8f9fa" }}
       >
         {/* Profile Image Section */}
-        {data.personal_info?.image_url && (
+        {(typeof data.personal_info?.image_url === 'string' && data.personal_info.image_url.trim() !== '') && (
           <div className="mb-6 flex justify-center">
             <div
               className="w-28 h-28 rounded-full overflow-hidden p-1 bg-white shadow-md border"

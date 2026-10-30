@@ -1,30 +1,31 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import NavbarDashboard from '../components/Navbar-Dashboard'
-import {useSelector} from 'react-redux'
-import { Loader } from '../components/Loader'
-import {Login} from './Login.jsx'
+import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import NavbarDashboard from '../components/Navbar-Dashboard';
+import { useSelector } from 'react-redux';
+import { Loader } from '../components/Loader';
+import { Login } from './Login.jsx';
 
 const Layout = () => {
+  const { user, loading } = useSelector((state) => state.auth);
+  const location = useLocation();
 
-  const {user , loading} = useSelector(state => state.auth)
-
-  if(loading){
-    return <Loader/>
+  if (loading) {
+    return <Loader />;
   }
-  return (
-    <div >
-      { 
-        user ? ( 
-        <div className='min-h-screen bg-gray-50'>
-          <NavbarDashboard />
-          <Outlet />
-        </div>)
-        : <Login/>
-      }
-     
-    </div>
-  )
-}
 
-export default Layout
+  // Allow access to the CV Builder without requiring login
+  const isBuilderRoute = location.pathname.includes('/builder');
+
+  if (user || isBuilderRoute) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <NavbarDashboard />
+        <Outlet />
+      </div>
+    );
+  }
+
+  return <Login />;
+};
+
+export default Layout;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function CTA() {
   return (
@@ -21,13 +22,13 @@ export default function CTA() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-            <a
-              href="#signup"
+            <Link
+              to="/app/builder/guest"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-base font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] active:scale-[0.99] transition-all shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F46200]"
             >
               <span>Build my CV for free</span>
               <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
 
             <a
               href="#pricing"

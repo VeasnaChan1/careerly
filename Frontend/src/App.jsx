@@ -19,7 +19,6 @@ import Dashboard from './pages/Dashboard';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Preview from './pages/Preview';
 import Profile from './pages/Profile';
-import { Login } from './pages/Login';
 
 import api from './config/api';
 import { login, setLoading } from './app/features/authSlice';
@@ -119,11 +118,18 @@ export default function App() {
         <Route path="/signup" element={<AuthPage initialMode="signup" onNavigateHome={navigateToHome} />} />
         <Route path="/about" element={<Footer />} />
 
-        {/* Protected Dashboard and CV Builder Layout */}
+        {/* Dashboard and CV Builder Layout */}
         <Route path="app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
+          <Route path="builder" element={<ResumeBuilder />} />
           <Route path="profile" element={<Profile />} />
+        </Route>
+
+        {/* Standalone builder routes */}
+        <Route path="builder" element={<Layout />}>
+          <Route index element={<ResumeBuilder />} />
+          <Route path=":resumeId" element={<ResumeBuilder />} />
         </Route>
 
         {/* Public view for shared resume links */}
