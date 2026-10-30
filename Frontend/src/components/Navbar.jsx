@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, ArrowRight } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user } = useSelector((state) => state.auth);
 
   const navLinks = [
-    { label: 'Features', href: '#features' },
-    { label: 'How it works', href: '#how-it-works' },
-    { label: 'Pricing', href: '#pricing' },
+    { label: 'Features', href: '/#features' },
+    { label: 'How it works', href: '/#how-it-works' },
+    { label: 'Pricing', href: '/#pricing' },
   ];
 
   return (
@@ -15,8 +18,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo / Brand */}
-          <a
-            href="#"
+          <Link
+            to="/"
             className="flex items-center gap-1.5 text-2xl font-bold tracking-tight text-[#2D2D2D] focus-visible:ring-2 focus-visible:ring-[#F46200] rounded-lg px-1 py-0.5"
             aria-label="Careerly Homepage"
           >
@@ -24,7 +27,7 @@ export default function Navbar() {
               Careerly
             </span>
             <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#D4111A] translate-y-[-4px]" aria-hidden="true"></span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-8" aria-label="Main Navigation">
@@ -41,18 +44,30 @@ export default function Navbar() {
 
           {/* Right Actions: Log In & Primary CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <a
-              href="#login"
-              className="px-4 py-2 text-sm font-semibold text-[#5A554E] hover:text-[#2D2D2D] hover:bg-[#EFECE6]/60 rounded-full transition-colors"
-            >
-              Log in
-            </a>
-            <a
-              href="#signup"
-              className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] active:scale-[0.98] transition-all shadow-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F46200]"
-            >
-              Build my CV
-            </a>
+            {user ? (
+              <Link
+                to="/app"
+                className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] active:scale-[0.98] transition-all shadow-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F46200]"
+              >
+                <span>Go to Dashboard</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 text-sm font-semibold text-[#5A554E] hover:text-[#2D2D2D] hover:bg-[#EFECE6]/60 rounded-full transition-colors"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] active:scale-[0.98] transition-all shadow-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F46200]"
+                >
+                  Build my CV
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -86,20 +101,32 @@ export default function Navbar() {
             ))}
           </nav>
           <div className="pt-2 flex flex-col gap-2.5">
-            <a
-              href="#login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full inline-flex items-center justify-center py-2.5 rounded-full text-sm font-semibold text-[#2D2D2D] border border-[#E7E2D8] bg-white hover:bg-[#FAF8F4] transition-colors"
-            >
-              Log in
-            </a>
-            <a
-              href="#signup"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full inline-flex items-center justify-center py-3 rounded-full text-sm font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] transition-colors"
-            >
-              Build my CV for free
-            </a>
+            {user ? (
+              <Link
+                to="/app"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full inline-flex items-center justify-center py-3 rounded-full text-sm font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] transition-colors"
+              >
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full inline-flex items-center justify-center py-2.5 rounded-full text-sm font-semibold text-[#2D2D2D] border border-[#E7E2D8] bg-white hover:bg-[#FAF8F4] transition-colors"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full inline-flex items-center justify-center py-3 rounded-full text-sm font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] transition-colors"
+                >
+                  Build my CV
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

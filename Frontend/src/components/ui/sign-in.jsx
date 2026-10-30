@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../../app/features/authSlice';
+import api from '../../config/api';
 import { Eye, EyeOff, ArrowLeft, Check, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
 
 // Google Official 4-Color SVG Icon
@@ -703,24 +707,50 @@ export function AuthPage({
     setTimeout(() => setToastMessage(""), 4000);
   };
 
-  const handleSignIn = (e) => {
+  const dispatch = typeof useDispatch === 'function' ? useDispatch() : null;
+  const navigate = typeof useNavigate === 'function' ? useNavigate() : null;
+
+  const handleSignIn = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    showToast(`Signed in successfully as ${data.email}! Redirecting...`);
-    setTimeout(() => {
-      if (onNavigateHome) onNavigateHome();
-    }, 1200);
+    try {
+      const res = await api.post('/api/users/login', {
+        email: data.email,
+        password: data.password
+      });
+      localStorage.setItem('token', res.data.token);
+      if (dispatch) dispatch(login({ token: res.data.token, user: res.data.user }));
+      showToast(`Welcome back, ${res.data.user?.name || res.data.user?.email || 'User'}!`);
+      setTimeout(() => {
+        if (navigate) navigate('/app');
+        else if (onNavigateHome) onNavigateHome();
+      }, 700);
+    } catch (err) {
+      showToast(err?.response?.data?.message || err.message || 'Login failed');
+    }
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    showToast(`Welcome to Careerly, ${data.fullName || "User"}! Your account is ready.`);
-    setTimeout(() => {
-      if (onNavigateHome) onNavigateHome();
-    }, 1200);
+    try {
+      const res = await api.post('/api/users/register', {
+        name: data.fullName,
+        email: data.email,
+        password: data.password
+      });
+      localStorage.setItem('token', res.data.token);
+      if (dispatch) dispatch(login({ token: res.data.token, user: res.data.user }));
+      showToast(`Welcome to Careerly, ${data.fullName || 'User'}! Account created successfully.`);
+      setTimeout(() => {
+        if (navigate) navigate('/app');
+        else if (onNavigateHome) onNavigateHome();
+      }, 700);
+    } catch (err) {
+      showToast(err?.response?.data?.message || err.message || 'Registration failed');
+    }
   };
 
   const handleGoogleSignIn = () => {
