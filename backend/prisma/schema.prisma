@@ -1,0 +1,197 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================
+// 1. User
+// ============================================================
+model User {
+  id                  String              @id @default(uuid()) @db.VarChar(36)
+  name                String?             @db.VarChar(255)
+  email               String              @unique @db.VarChar(255)
+  password_hash       String?             @db.Text
+  role                String              @default("user") @db.VarChar(50)
+  created_at          DateTime            @default(now())
+
+  resumes             Resume[]
+  interview_questions InterviewQuestion[]
+  jobs                Job[]
+
+  @@map("users")
+}
+
+// ============================================================
+// 2. Resume
+// ============================================================
+model Resume {
+  id                   String              @id @default(uuid()) @db.Uuid
+  user_id              String              @db.VarChar(36)
+  title                String?             @default("Untitled Resume") @db.VarChar(255)
+  is_public            Boolean             @default(false)
+  public_slug          String?             @unique @db.VarChar(100)
+  template             String?             @default("classic") @db.VarChar(100)
+  accent_color         String?             @default("#3B82F6") @db.VarChar(20)
+  professional_summary String?             @db.Text
+  created_at           DateTime            @default(now())
+  updated_at           DateTime            @default(now()) @updatedAt
+
+  user                 User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  personal_info        PersonalInfo?
+  experiences          Experience[]
+  education            Education[]
+  projects             Project[]
+  skills               Skill[]
+  interview_questions  InterviewQuestion[]
+
+  @@index([user_id], map: "idx_resumes_user_id")
+  @@index([public_slug], map: "idx_resumes_public_slug")
+  @@map("resumes")
+}
+
+// ============================================================
+// 3. PersonalInfo (1:1 with Resume)
+// ============================================================
+model PersonalInfo {
+  id         String  @id @default(uuid()) @db.Uuid
+  resume_id  String  @unique @db.Uuid
+  full_name  String? @db.VarChar(255)
+  profession String? @db.VarChar(255)
+  email      String? @db.VarChar(255)
+  phone      String? @db.VarChar(50)
+  location   String? @db.VarChar(255)
+  linkedin   String? @db.VarChar(255)
+  website    String? @db.VarChar(255)
+  image_url  String? @db.Text
+
+  resume     Resume  @relation(fields: [resume_id], references: [id], onDelete: Cascade)
+
+  @@map("personal_info")
+}
+
+// ============================================================
+// 4. Experience (1:N with Resume)
+// ============================================================
+model Experience {
+  id          String   @id @default(uuid()) @db.Uuid
+  resume_id   String   @db.Uuid
+  position    String?  @db.VarChar(255)
+  company     String?  @db.VarChar(255)
+  job_title   String?  @db.VarChar(255)
+  start_date  String?  @db.VarChar(50)
+  end_date    String?  @db.VarChar(50)
+  is_current  Boolean? @default(false)
+  description String?  @db.Text
+
+  resume      Resume   @relation(fields: [resume_id], references: [id], onDelete: Cascade)
+
+  @@index([resume_id], map: "idx_experience_resume")
+  @@map("experience")
+}
+
+// ============================================================
+// 5. Education (1:N with Resume)
+// ============================================================
+model Education {
+  id              String  @id @default(uuid()) @db.Uuid
+  resume_id       String  @db.Uuid
+  position        Int     @default(0)
+  institution     String? @db.VarChar(255)
+  degree          String? @db.VarChar(255)
+  field           String? @db.VarChar(255)
+  graduation_date String? @db.VarChar(50)
+  gpa             String? @db.VarChar(20)
+
+  resume          Resume  @relation(fields: [resume_id], references: [id], onDelete: Cascade)
+
+  @@index([resume_id], map: "idx_education_resume")
+  @@map("education")
+}
+
+// ============================================================
+// 6. Project (1:N with Resume)
+// ============================================================
+model Project {
+  id          String  @id @default(uuid()) @db.Uuid
+  resume_id   String  @db.Uuid
+  position    Int     @default(0)
+  name        String? @db.VarChar(255)
+  type        String? @db.VarChar(100)
+  description String? @db.Text
+
+  resume      Resume  @relation(fields: [resume_id], references: [id], onDelete: Cascade)
+
+  @@index([resume_id], map: "idx_projects_resume")
+  @@map("projects")
+}
+
+// ============================================================
+// 7. Skill (1:N with Resume)
+// ============================================================
+model Skill {
+  id          String  @id @default(uuid()) @db.Uuid
+  resume_id   String  @db.Uuid
+  skill_name  String? @db.VarChar(100)
+  proficiency String? @default("intermediate") @db.VarChar(50)
+
+  resume      Resume  @relation(fields: [resume_id], references: [id], onDelete: Cascade)
+
+  @@map("skills")
+}
+
+// ============================================================
+// 8. Job (Job Finding feature)
+// ============================================================
+model Job {
+  id                  String              @id @default(uuid()) @db.Uuid
+  user_id             String?             @db.VarChar(36)
+  title               String              @db.VarChar(255)
+  company             String              @db.VarChar(255)
+  location            String?             @db.VarChar(255)
+  job_type            String?             @default("full-time") @db.VarChar(100)
+  salary_range        String?             @db.VarChar(100)
+  description         String?             @db.Text
+  requirements        String?             @db.Text
+  job_url             String?             @db.Text
+  status              String?             @default("open") @db.VarChar(50)
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @default(now()) @updatedAt
+
+  user                User?               @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  interview_questions InterviewQuestion[]
+
+  @@index([user_id], map: "idx_jobs_user_id")
+  @@map("jobs")
+}
+
+// ============================================================
+// 9. InterviewQuestion (AI-Generated Interview Questions)
+// ============================================================
+model InterviewQuestion {
+  id               String   @id @default(uuid()) @db.Uuid
+  user_id          String   @db.VarChar(36)
+  resume_id        String?  @db.Uuid
+  job_id           String?  @db.Uuid
+  job_role         String?  @db.VarChar(255)
+  category         String?  @default("technical") @db.VarChar(100)
+  difficulty       String?  @default("medium") @db.VarChar(50)
+  question         String   @db.Text
+  suggested_answer String?  @db.Text
+  user_answer      String?  @db.Text
+  ai_feedback      String?  @db.Text
+  created_at       DateTime @default(now())
+
+  user             User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  resume           Resume?  @relation(fields: [resume_id], references: [id], onDelete: SetNull)
+  job              Job?     @relation(fields: [job_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id], map: "idx_interview_questions_user_id")
+  @@index([resume_id], map: "idx_interview_questions_resume_id")
+  @@index([job_id], map: "idx_interview_questions_job_id")
+  @@map("interview_questions")
+}
