@@ -23,7 +23,8 @@ export default function Problem() {
   ];
 
   return (
-    <section id="problem" className="py-20 border-t border-[#E7E2D8] bg-[#FAF8F4]">
+    <section id="how-it-works" className="relative py-20 border-t border-[#E7E2D8] bg-[#FAF8F4]">
+      <div id="problem" className="absolute -top-20" aria-hidden="true" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header with deck-style 01 counter and thin rule */}

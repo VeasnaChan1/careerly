@@ -76,8 +76,11 @@ export default function App() {
 
   useEffect(() => {
     const handleHashChange = () => {
-      setCurrentHash(window.location.hash);
-      window.scrollTo(0, 0);
+      const hash = window.location.hash;
+      setCurrentHash(hash);
+      if (hash === '#login' || hash === '#signin' || hash === '#signup' || hash === '#register') {
+        window.scrollTo(0, 0);
+      }
     };
 
     window.addEventListener('hashchange', handleHashChange);
