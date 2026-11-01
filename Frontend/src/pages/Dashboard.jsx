@@ -375,7 +375,7 @@ const Dashboard = () => {
             {/* Create Trigger */}
             <button
               onClick={() => setShowCreateResume(true)}
-              className="w-full text-left bg-gradient-to-r from-[#e52d27] to-[#b31217] hover:opacity-90 text-white font-semibold p-5 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 group flex items-center justify-between"
+              className="w-full text-left bg-gradient-to-r from-[#e54d27] to-[#F46200] hover:opacity-90 text-white font-semibold p-5 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 group flex items-center justify-between"
             >
               <div>
                 <h3 className="text-[15px]">Create Blank CV</h3>
@@ -396,7 +396,7 @@ const Dashboard = () => {
                 <p className="text-[11px] text-slate-400 font-light mt-0.5">Upload & parse using AI</p>
               </div>
               <div className="p-2 bg-slate-50 border border-slate-100 rounded-xl group-hover:scale-110 transition-transform group-hover:bg-red-50">
-                <UploadCloud className="size-5 text-slate-500 group-hover:text-[#e52d27]" />
+                <UploadCloud className="size-5 text-slate-500 group-hover:text-[#F46200]" />
               </div>
             </button>
 
@@ -503,7 +503,7 @@ const Dashboard = () => {
 
                       {/* Card Content (Title) */}
                       <div className="p-4 flex flex-col justify-center">
-                        <h3 className="font-medium text-slate-800 text-sm leading-snug truncate group-hover:text-[#e52d27] transition-colors">
+                        <h3 className="font-medium text-slate-800 text-sm leading-snug truncate group-hover:text-[#F46200] transition-colors">
                           {resume.title}
                         </h3>
                         <p className="text-slate-400 text-[10px] mt-1 flex items-center gap-1">
@@ -520,7 +520,7 @@ const Dashboard = () => {
                             setEditResumeId(resume.id);
                             setTitle(resume.title);
                           }}
-                          className="p-3 bg-white hover:bg-red-50 border border-slate-200/60 text-slate-700 hover:text-[#e52d27] shadow-md rounded-xl transition-all duration-200 hover:scale-105 active:scale-95"
+                          className="p-3 bg-white hover:bg-red-50 border border-slate-200/60 text-slate-700 hover:text-[#F46200] shadow-md rounded-xl transition-all duration-200 hover:scale-105 active:scale-95"
                           title="Rename Document"
                         >
                           <Pencil className="size-4" />
@@ -530,7 +530,7 @@ const Dashboard = () => {
                             e.stopPropagation();
                             duplicateResume(resume.id);
                           }}
-                          className="p-3 bg-white hover:bg-red-50 border border-slate-200/60 text-slate-700 hover:text-[#e52d27] shadow-md rounded-xl transition-all duration-200 hover:scale-105 active:scale-95"
+                          className="p-3 bg-white hover:bg-red-50 border border-slate-200/60 text-slate-700 hover:text-[#F46200] shadow-md rounded-xl transition-all duration-200 hover:scale-105 active:scale-95"
                           title="Duplicate Document"
                         >
                           <Copy className="size-4" />
@@ -540,7 +540,7 @@ const Dashboard = () => {
                             e.stopPropagation();
                             setDeleteResumeId(resume.id);
                           }}
-                          className="p-3 bg-white hover:bg-red-50 border border-slate-200/60 text-slate-700 hover:text-[#e52d27] shadow-md rounded-xl transition-all duration-200 hover:scale-105 active:scale-95"
+                          className="p-3 bg-white hover:bg-red-50 border border-slate-200/60 text-slate-700 hover:text-[#F46200] shadow-md rounded-xl transition-all duration-200 hover:scale-105 active:scale-95"
                           title="Delete Document"
                         >
                           <Trash2 className="size-4" />
@@ -590,7 +590,7 @@ const Dashboard = () => {
                     required
                   />
 
-                  <button className="w-full py-2.5 bg-gradient-to-r from-[#e52d27] to-[#b31217] hover:opacity-90 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all text-sm">
+                  <button className="w-full py-2.5 bg-gradient-to-r from-[#e54d27] to-[#F46200] hover:opacity-90 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all text-sm">
                     Next: Choose Template
                   </button>
                 </form>
@@ -634,7 +634,7 @@ const Dashboard = () => {
                         <div className="mt-1 flex items-center justify-between">
                           <span className="text-[11px] font-medium text-slate-700 truncate mr-1">{tpl.name}</span>
                           {selectedTemplate === tpl.id && (
-                            <span className="size-2 rounded-full bg-[#e52d27] flex-shrink-0" />
+                            <span className="size-2 rounded-full bg-[#F46200] flex-shrink-0" />
                           )}
                         </div>
                       </div>
@@ -651,7 +651,7 @@ const Dashboard = () => {
                     </button>
                     <button
                       onClick={() => createResme()}
-                      className="px-6 py-2 bg-gradient-to-r from-[#e52d27] to-[#b31217] hover:opacity-90 text-white font-semibold rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all text-xs"
+                      className="px-6 py-2 bg-gradient-to-r from-[#e54d27] to-[#F46200] hover:opacity-90 text-white font-semibold rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all text-xs"
                     >
                       Create Resume
                     </button>
@@ -707,10 +707,10 @@ const Dashboard = () => {
                   className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-6 mb-5 hover:border-red-500 hover:bg-red-50/10 cursor-pointer transition-colors group"
                 >
                   {resume ? (
-                    <p className="text-sm font-medium text-[#e52d27] break-all">{resume.name}</p>
+                    <p className="text-sm font-medium text-[#F46200] break-all">{resume.name}</p>
                   ) : (
                     <>
-                      <UploadCloud className="size-10 stroke-1 text-slate-400 group-hover:text-[#e52d27] transition-colors mb-2" />
+                      <UploadCloud className="size-10 stroke-1 text-slate-400 group-hover:text-[#F46200] transition-colors mb-2" />
                       <p className="text-xs text-slate-500">Choose a PDF file to upload</p>
                     </>
                   )}
@@ -726,7 +726,7 @@ const Dashboard = () => {
 
               <button
                 disabled={isLoading}
-                className="w-full py-2.5 bg-gradient-to-r from-[#e52d27] to-[#b31217] hover:opacity-90 disabled:from-slate-400 disabled:to-slate-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all text-sm flex items-center justify-center gap-2"
+                className="w-full py-2.5 bg-gradient-to-r from-[#e54d27] to-[#F46200] hover:opacity-90 disabled:from-slate-400 disabled:to-slate-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all text-sm flex items-center justify-center gap-2"
               >
                 {isLoading && <LoaderCircle className="animate-spin size-4 text-white" />}
                 {isLoading ? 'Uploading & Parsing...' : 'Import Resume'}
@@ -770,7 +770,7 @@ const Dashboard = () => {
                 required
               />
 
-              <button className="w-full py-2.5 bg-gradient-to-r from-[#e52d27] to-[#b31217] hover:opacity-90 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all text-sm">
+              <button className="w-full py-2.5 bg-gradient-to-r from-[#e54d27] to-[#F46200] hover:opacity-90 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all text-sm">
                 Rename Resume
               </button>
 
@@ -799,7 +799,7 @@ const Dashboard = () => {
               className="relative bg-white border border-slate-100 shadow-xl rounded-2xl w-full max-w-[340px] p-5 text-center overflow-hidden"
             >
               <div className="mx-auto w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-3">
-                <Trash2 className="size-5 text-[#e52d27]" />
+                <Trash2 className="size-5 text-[#F46200]" />
               </div>
               <h2 className="text-lg font-semibold text-slate-800 mb-1">
                 Delete Resume
@@ -819,7 +819,7 @@ const Dashboard = () => {
                 <button
                   type="button"
                   onClick={() => deleteResume(deleteResumeId)}
-                  className="w-1/2 py-2 bg-gradient-to-r from-[#e52d27] to-[#b31217] hover:opacity-95 text-white font-medium rounded-xl transition-all text-xs"
+                  className="w-1/2 py-2 bg-gradient-to-r from-[#e54d27] to-[#F46200] hover:opacity-95 text-white font-medium rounded-xl transition-all text-xs"
                 >
                   Delete
                 </button>
