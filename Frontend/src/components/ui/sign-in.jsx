@@ -332,23 +332,6 @@ export function SignInPage({
                 <span>Empowering 12,000+ Cambodian job seekers</span>
               </div>
             </div>
-
-            {/* Floating Testimonials at the bottom */}
-            {testimonials.length > 0 && (
-              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 px-6 w-full justify-center items-end">
-                <TestimonialCard testimonial={testimonials[0]} delay="animate-delay-1000" />
-                {testimonials[1] && (
-                  <div className="hidden xl:flex">
-                    <TestimonialCard testimonial={testimonials[1]} delay="animate-delay-1200" />
-                  </div>
-                )}
-                {testimonials[2] && (
-                  <div className="hidden 2xl:flex">
-                    <TestimonialCard testimonial={testimonials[2]} delay="animate-delay-1400" />
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </section>
       )}
@@ -666,23 +649,6 @@ export function SignUpPage({
                 <span>Build your English CV in under 15 minutes</span>
               </div>
             </div>
-
-            {/* Floating Testimonials at the bottom */}
-            {testimonials.length > 0 && (
-              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 px-6 w-full justify-center items-end">
-                <TestimonialCard testimonial={testimonials[0]} delay="animate-delay-1000" />
-                {testimonials[1] && (
-                  <div className="hidden xl:flex">
-                    <TestimonialCard testimonial={testimonials[1]} delay="animate-delay-1200" />
-                  </div>
-                )}
-                {testimonials[2] && (
-                  <div className="hidden 2xl:flex">
-                    <TestimonialCard testimonial={testimonials[2]} delay="animate-delay-1400" />
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </section>
       )}
