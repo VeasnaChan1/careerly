@@ -40,6 +40,42 @@ function LandingPage() {
   );
 }
 
+
+const toasterConfig = {
+  position: 'top-center',
+  toastOptions: {
+    duration: 4000,
+    style: {
+      background: '#FFFFFF',
+      color: '#2D2D2D',
+      border: '1px solid #E7E2D8',
+      borderRadius: '16px',
+      padding: '12px 18px',
+      fontSize: '14px',
+      boxShadow: '0 12px 32px rgba(45, 45, 45, 0.1)',
+      fontWeight: '500',
+    },
+    error: {
+      iconTheme: {
+        primary: '#D4111A',
+        secondary: '#FFFFFF',
+      },
+      style: {
+        border: '1px solid rgba(212, 17, 26, 0.25)',
+      },
+    },
+    success: {
+      iconTheme: {
+        primary: '#F46200',
+        secondary: '#FFFFFF',
+      },
+      style: {
+        border: '1px solid rgba(244, 98, 0, 0.25)',
+      },
+    },
+  },
+};
+
 export default function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -96,7 +132,7 @@ export default function App() {
   if (location.pathname === '/' && (currentHash === '#login' || currentHash === '#signin')) {
     return (
       <>
-        <Toaster />
+        <Toaster {...toasterConfig} />
         <AuthPage initialMode="signin" onNavigateHome={navigateToHome} />
       </>
     );
@@ -105,7 +141,7 @@ export default function App() {
   if (location.pathname === '/' && (currentHash === '#signup' || currentHash === '#register')) {
     return (
       <>
-        <Toaster />
+        <Toaster {...toasterConfig} />
         <AuthPage initialMode="signup" onNavigateHome={navigateToHome} />
       </>
     );
@@ -114,7 +150,7 @@ export default function App() {
   return (
     <>
       <LenisScroll />
-      <Toaster position="top-center" />
+      <Toaster {...toasterConfig} />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<AuthPage initialMode="signin" onNavigateHome={navigateToHome} />} />

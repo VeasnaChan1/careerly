@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../app/features/authSlice';
 import api from '../../config/api';
-import { Eye, EyeOff, ArrowLeft, Check, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Check, X, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
 
 // Google Official 4-Color SVG Icon
 export function GoogleIcon({ className = "h-5 w-5" }) {
@@ -666,12 +666,33 @@ export function AuthPage({
   const [mode, setMode] = useState(initialMode); // 'signin' | 'signup' | 'reset'
   const [resetSent, setResetSent] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
-  const [toastMessage, setToastMessage] = useState("");
+  const [toast, setToast] = useState(null); // { message: string, type: 'error' | 'success' | 'info' }
+  const toastTimeoutRef = useRef(null);
 
-  const showToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(""), 4000);
+  const showToast = (message, type = "success") => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    setToast({ message, type });
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null);
+    }, 4500);
   };
+
+  const hideToast = () => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    setToast(null);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const dispatch = typeof useDispatch === 'function' ? useDispatch() : null;
   const navigate = typeof useNavigate === 'function' ? useNavigate() : null;
@@ -687,13 +708,15 @@ export function AuthPage({
       });
       localStorage.setItem('token', res.data.token);
       if (dispatch) dispatch(login({ token: res.data.token, user: res.data.user }));
-      showToast(`Welcome back, ${res.data.user?.name || res.data.user?.email || 'User'}!`);
+      showToast(`Welcome back, ${res.data.user?.name || res.data.user?.email || 'User'}!`, 'success');
       setTimeout(() => {
         if (navigate) navigate('/app');
         else if (onNavigateHome) onNavigateHome();
       }, 700);
     } catch (err) {
-      showToast(err?.response?.data?.message || err.message || 'Login failed');
+      const backendMessage = err?.response?.data?.message || err?.response?.data?.error;
+      const displayMessage = backendMessage || (err?.response?.status === 401 ? 'Invalid email or password' : (err.message || 'Invalid email or password'));
+      showToast(displayMessage, 'error');
     }
   };
 
@@ -709,20 +732,22 @@ export function AuthPage({
       });
       localStorage.setItem('token', res.data.token);
       if (dispatch) dispatch(login({ token: res.data.token, user: res.data.user }));
-      showToast(`Welcome to Careerly, ${data.fullName || 'User'}! Account created successfully.`);
+      showToast(`Welcome to Careerly, ${data.fullName || 'User'}! Account created successfully.`, 'success');
       setTimeout(() => {
         if (navigate) navigate('/app');
         else if (onNavigateHome) onNavigateHome();
       }, 700);
     } catch (err) {
-      showToast(err?.response?.data?.message || err.message || 'Registration failed');
+      const backendMessage = err?.response?.data?.message || err?.response?.data?.error;
+      const displayMessage = backendMessage || (err.message || 'Registration failed');
+      showToast(displayMessage, 'error');
     }
   };
 
   const handleGoogleSignIn = () => {
-    showToast("Connecting with Google OAuth...");
+    showToast("Connecting with Google OAuth...", 'info');
     setTimeout(() => {
-      showToast("Google Authentication successful! Welcome.");
+      showToast("Google Authentication successful! Welcome.", 'success');
       setTimeout(() => {
         if (onNavigateHome) onNavigateHome();
       }, 1000);
@@ -732,17 +757,50 @@ export function AuthPage({
   const handleResetPasswordSubmit = (e) => {
     e.preventDefault();
     setResetSent(true);
-    showToast(`Password reset link sent to ${resetEmail || "your email"}`);
+    showToast(`Password reset link sent to ${resetEmail || "your email"}`, 'success');
   };
 
   return (
     <div className="relative">
       {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 animate-bounce">
-          <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#1F1F1F] text-white text-xs sm:text-sm font-medium shadow-2xl border border-white/10">
-            <Check className="w-4 h-4 text-emerald-400" />
-            <span>{toastMessage}</span>
+      {toast && (
+        <div className="fixed top-6 left-1/2 z-50 animate-toast-in pointer-events-auto max-w-[92vw] sm:max-w-md">
+          <div
+            role="alert"
+            className={`inline-flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl border backdrop-blur-md transition-all ${
+              toast.type === 'error'
+                ? 'bg-white border-[#D4111A]/30 text-[#2D2D2D] shadow-[0_16px_36px_rgba(212,17,26,0.14),0_4px_12px_rgba(45,45,45,0.06)] ring-4 ring-[#D4111A]/5'
+                : toast.type === 'success'
+                ? 'bg-white border-[#F46200]/30 text-[#2D2D2D] shadow-[0_16px_36px_rgba(244,98,0,0.14),0_4px_12px_rgba(45,45,45,0.06)] ring-4 ring-[#F46200]/5'
+                : 'bg-white border-[#E7E2D8] text-[#2D2D2D] shadow-[0_16px_36px_rgba(45,45,45,0.08)]'
+            }`}
+          >
+            {toast.type === 'error' ? (
+              <div className="w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full bg-[#D4111A] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" />
+              </div>
+            ) : toast.type === 'success' ? (
+              <div className="w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full bg-[#F46200] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" />
+              </div>
+            ) : (
+              <div className="w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full bg-[#FFF3EB] text-[#F46200] border border-[#F46200]/25 flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-3.5 h-3.5" />
+              </div>
+            )}
+
+            <span className="text-xs sm:text-sm font-semibold text-[#2D2D2D] tracking-tight break-words">
+              {toast.message}
+            </span>
+
+            <button
+              type="button"
+              onClick={hideToast}
+              className="text-[#8A847C] hover:text-[#2D2D2D] hover:bg-black/5 p-1 rounded-lg transition-colors cursor-pointer flex-shrink-0 ml-1.5"
+              aria-label="Dismiss notification"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       )}
