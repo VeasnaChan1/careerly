@@ -2,12 +2,13 @@ import prisma from "../db/prisma.js";
 import { imageKit } from "../config/imageKit.js";
 import fs from "fs";
 import * as resumeRepository from "../repositories/resumeRepository.js";
+import { cleanResumeData } from "../utils/cleanResumeData.js";
 
 // POST /api/resumes/create
 export const createResume = async (req, res) => {
   try {
     const userId = req.userId;
-    const { title, template } = req.body;
+    const { title, template } = cleanResumeData(req.body);
 
     const newResume = await resumeRepository.createResume(userId, title, template);
 
@@ -260,7 +261,9 @@ export const updateResume = async (req, res) => {
       });
     }
 
-    const data = typeof resumeData === "string" ? JSON.parse(resumeData) : resumeData || {};
+    const data = cleanResumeData(
+      typeof resumeData === "string" ? JSON.parse(resumeData) : resumeData || {}
+    );
 
     if (data.public !== undefined) {
       data.is_public = data.public;

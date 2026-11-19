@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Navigate, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 
@@ -138,6 +138,14 @@ export default function App() {
     window.location.hash = '';
     navigate('/');
   };
+
+  // Open account email links in React after the static host serves the entry page.
+  if (location.pathname === '/' || location.pathname === '/index.html') {
+    const flow = new URLSearchParams(location.hash.slice(1)).get('flow');
+    if (flow === 'reset-password' || flow === 'verify-email') {
+      return <Navigate replace to={{ pathname: '/' + flow, hash: location.hash }} />;
+    }
+  }
 
   // If hash points to login / signin / signup / register on the root route
   if (location.pathname === '/' && (currentHash === '#login' || currentHash === '#signin')) {

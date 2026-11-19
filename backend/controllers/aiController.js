@@ -1,4 +1,5 @@
 import prisma from "../db/prisma.js";
+import { cleanResumeData } from "../utils/cleanResumeData.js";
 import ai from "../config/ai.js";
 import "dotenv/config";
 import fs from "fs";
@@ -453,7 +454,7 @@ Respond ONLY with a valid JSON object in this exact format:
 // POST /api/ai/upload-resume
 export const uploadResume = async (req, res) => {
   try {
-    const { resumeText, title } = req.body;
+    const { resumeText, title } = cleanResumeData(req.body);
     const userId = req.userId;
     const file = req.file;
 
@@ -550,7 +551,7 @@ Provide data in the following JSON format with no additional text before or afte
         extractedData = extractedData.replace(/^```json\s*/i, "").replace(/```$/, "").trim();
       }
       try {
-        parsedData = JSON.parse(extractedData);
+        parsedData = cleanResumeData(JSON.parse(extractedData));
       } catch (e) {
         console.error("Failed to parse AI JSON response:", e);
       }

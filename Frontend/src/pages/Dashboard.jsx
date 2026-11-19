@@ -405,7 +405,7 @@ const Dashboard = () => {
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#F46200] hover:bg-[#DC5800] text-white font-semibold text-xs sm:text-sm rounded-xl shadow-xs hover:shadow transition-all cursor-pointer active:scale-95"
               >
                 <Plus className="size-4" />
-                <span>+ Create Blank CV</span>
+                <span>Create Blank CV</span>
               </button>
             </div>
           </div>
@@ -582,7 +582,7 @@ const Dashboard = () => {
                 onClick={() => setShowCreateResume(true)}
                 className="px-5 py-2.5 bg-[#F46200] hover:bg-[#DC5800] text-white font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition-all cursor-pointer"
               >
-                + Create Blank CV
+                Create Blank CV
               </button>
               <button
                 onClick={() => setShowUploadResume(true)}
