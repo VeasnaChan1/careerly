@@ -2,6 +2,7 @@ import prisma from "../db/prisma.js";
 import { imageKit } from "../config/imageKit.js";
 import fs from "fs";
 import * as resumeRepository from "../repositories/resumeRepository.js";
+import { cleanNullBytes } from "../utils/sanitize.js";
 
 // POST /api/resumes/create
 export const createResume = async (req, res) => {
@@ -147,14 +148,14 @@ export const duplicateResume = async (req, res) => {
         await tx.personalInfo.create({
           data: {
             resume_id: newResume.id,
-            full_name: original.personal_info.full_name || "",
-            profession: original.personal_info.profession || "",
-            email: original.personal_info.email || "",
-            phone: original.personal_info.phone || "",
-            location: original.personal_info.location || "",
-            linkedin: original.personal_info.linkedin || "",
-            website: original.personal_info.website || "",
-            image_url: original.personal_info.image_url || ""
+            full_name: cleanNullBytes(original.personal_info.full_name) || "",
+            profession: cleanNullBytes(original.personal_info.profession) || "",
+            email: cleanNullBytes(original.personal_info.email) || "",
+            phone: cleanNullBytes(original.personal_info.phone) || "",
+            location: cleanNullBytes(original.personal_info.location) || "",
+            linkedin: cleanNullBytes(original.personal_info.linkedin) || "",
+            website: cleanNullBytes(original.personal_info.website) || "",
+            image_url: cleanNullBytes(original.personal_info.image_url) || ""
           }
         });
       }
@@ -163,13 +164,13 @@ export const duplicateResume = async (req, res) => {
         await tx.experience.createMany({
           data: original.experiences.map((exp, idx) => ({
             resume_id: newResume.id,
-            position: exp.position !== undefined ? exp.position : idx,
-            company: exp.company || "",
-            job_title: exp.job_title || "",
-            start_date: exp.start_date || "",
-            end_date: exp.end_date || "",
+            position: typeof exp.position === "number" ? exp.position : (parseInt(exp.position, 10) || idx),
+            company: cleanNullBytes(exp.company) || "",
+            job_title: cleanNullBytes(exp.job_title) || "",
+            start_date: cleanNullBytes(exp.start_date) || "",
+            end_date: cleanNullBytes(exp.end_date) || "",
             is_current: !!exp.is_current,
-            description: exp.description || ""
+            description: cleanNullBytes(exp.description) || ""
           }))
         });
       }
@@ -179,11 +180,11 @@ export const duplicateResume = async (req, res) => {
           data: original.education.map((edu, idx) => ({
             resume_id: newResume.id,
             position: edu.position !== undefined ? edu.position : idx,
-            institution: edu.institution || "",
-            degree: edu.degree || "",
-            field: edu.field || "",
-            graduation_date: edu.graduation_date || "",
-            gpa: edu.gpa || ""
+            institution: cleanNullBytes(edu.institution) || "",
+            degree: cleanNullBytes(edu.degree) || "",
+            field: cleanNullBytes(edu.field) || "",
+            graduation_date: cleanNullBytes(edu.graduation_date) || "",
+            gpa: cleanNullBytes(edu.gpa) || ""
           }))
         });
       }
@@ -193,9 +194,9 @@ export const duplicateResume = async (req, res) => {
           data: original.projects.map((proj, idx) => ({
             resume_id: newResume.id,
             position: proj.position !== undefined ? proj.position : idx,
-            name: proj.name || "",
-            type: proj.type || "",
-            description: proj.description || ""
+            name: cleanNullBytes(proj.name) || "",
+            type: cleanNullBytes(proj.type) || "",
+            description: cleanNullBytes(proj.description) || ""
           }))
         });
       }
@@ -204,8 +205,8 @@ export const duplicateResume = async (req, res) => {
         await tx.skill.createMany({
           data: original.skills.map((sk) => ({
             resume_id: newResume.id,
-            skill_name: typeof sk === "string" ? sk : sk.skill_name || "",
-            proficiency: (typeof sk === "object" && sk.proficiency) || "intermediate"
+            skill_name: cleanNullBytes(typeof sk === "string" ? sk : sk.skill_name || ""),
+            proficiency: cleanNullBytes((typeof sk === "object" && sk.proficiency) || "intermediate")
           }))
         });
       }

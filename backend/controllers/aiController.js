@@ -4,6 +4,7 @@ import "dotenv/config";
 import fs from "fs";
 import { imageKit } from "../config/imageKit.js";
 import { PDFDocument, PDFRawStream, PDFName } from "pdf-lib";
+import { cleanNullBytes } from "../utils/sanitize.js";
 
 async function generateWithFallback(options) {
   const models = [
@@ -611,11 +612,14 @@ Provide data in the following JSON format with no additional text before or afte
       };
     }
 
+    // Sanitize any null bytes (\0 / 0x00) across the entire parsedData object to protect PostgreSQL
+    parsedData = cleanNullBytes(parsedData);
+
     const newResume = await prisma.resume.create({
       data: {
         user_id: userId,
-        title: title || "Uploaded Resume",
-        professional_summary: parsedData.professional_summary || "",
+        title: cleanNullBytes(title) || "Uploaded Resume",
+        professional_summary: cleanNullBytes(parsedData.professional_summary) || "",
         is_public: false
       }
     });
@@ -641,14 +645,14 @@ Provide data in the following JSON format with no additional text before or afte
       await prisma.personalInfo.create({
         data: {
           resume_id: newResume.id,
-          image_url: finalImageUrl || parsedData.personal_info.image || "",
-          full_name: parsedData.personal_info.full_name || "",
-          profession: parsedData.personal_info.profession || "",
-          email: parsedData.personal_info.email || "",
-          phone: parsedData.personal_info.phone || "",
-          location: parsedData.personal_info.location || "",
-          linkedin: parsedData.personal_info.linkedin || "",
-          website: parsedData.personal_info.website || ""
+          image_url: finalImageUrl || cleanNullBytes(parsedData.personal_info.image) || "",
+          full_name: cleanNullBytes(parsedData.personal_info.full_name) || "",
+          profession: cleanNullBytes(parsedData.personal_info.profession) || "",
+          email: cleanNullBytes(parsedData.personal_info.email) || "",
+          phone: cleanNullBytes(parsedData.personal_info.phone) || "",
+          location: cleanNullBytes(parsedData.personal_info.location) || "",
+          linkedin: cleanNullBytes(parsedData.personal_info.linkedin) || "",
+          website: cleanNullBytes(parsedData.personal_info.website) || ""
         }
       });
     }
@@ -657,13 +661,13 @@ Provide data in the following JSON format with no additional text before or afte
       await prisma.experience.createMany({
         data: parsedData.experiences.map((exp, idx) => ({
           resume_id: newResume.id,
-          position: typeof exp.position === "number" ? exp.position : idx,
-          company: exp.company || "",
-          job_title: exp.job_title || exp.position || "",
-          start_date: exp.start_date || "",
-          end_date: exp.end_date || "",
+          position: typeof exp.position === "number" ? exp.position : (parseInt(exp.position, 10) || idx),
+          company: cleanNullBytes(exp.company) || "",
+          job_title: cleanNullBytes(exp.job_title || exp.position) || "",
+          start_date: cleanNullBytes(exp.start_date) || "",
+          end_date: cleanNullBytes(exp.end_date) || "",
           is_current: !!exp.is_current,
-          description: exp.description || ""
+          description: cleanNullBytes(exp.description) || ""
         }))
       });
     }
@@ -673,11 +677,11 @@ Provide data in the following JSON format with no additional text before or afte
         data: parsedData.educations.map((edu, idx) => ({
           resume_id: newResume.id,
           position: typeof edu.position === "number" ? edu.position : idx,
-          institution: edu.institution || "",
-          degree: edu.degree || "",
-          field: edu.field || "",
-          graduation_date: edu.graduation_date || "",
-          gpa: edu.gpa || ""
+          institution: cleanNullBytes(edu.institution) || "",
+          degree: cleanNullBytes(edu.degree) || "",
+          field: cleanNullBytes(edu.field) || "",
+          graduation_date: cleanNullBytes(edu.graduation_date) || "",
+          gpa: cleanNullBytes(edu.gpa) || ""
         }))
       });
     }
@@ -687,9 +691,9 @@ Provide data in the following JSON format with no additional text before or afte
         data: parsedData.projects.map((proj, idx) => ({
           resume_id: newResume.id,
           position: typeof proj.position === "number" ? proj.position : idx,
-          name: proj.name || "",
-          type: proj.type || "",
-          description: proj.description || ""
+          name: cleanNullBytes(proj.name) || "",
+          type: cleanNullBytes(proj.type) || "",
+          description: cleanNullBytes(proj.description) || ""
         }))
       });
     }
@@ -698,8 +702,8 @@ Provide data in the following JSON format with no additional text before or afte
       await prisma.skill.createMany({
         data: parsedData.skills.map((skill) => ({
           resume_id: newResume.id,
-          skill_name: typeof skill === "string" ? skill : skill.skill_name || "",
-          proficiency: (typeof skill === "object" && skill.proficiency) || "intermediate"
+          skill_name: cleanNullBytes(typeof skill === "string" ? skill : skill.skill_name || ""),
+          proficiency: cleanNullBytes((typeof skill === "object" && skill.proficiency) || "intermediate")
         }))
       });
     }

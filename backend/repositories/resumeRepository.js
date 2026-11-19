@@ -1,4 +1,5 @@
 import prisma from "../db/prisma.js";
+import { cleanNullBytes } from "../utils/sanitize.js";
 
 const resumeIncludeRelations = {
   personal_info: true,
@@ -124,28 +125,29 @@ export async function updateResumeFields(resumeId, userId, resumeFields, client 
 
 export async function upsertPersonalInfo(resumeId, info, client = prisma) {
   try {
+    const clean = cleanNullBytes(info || {});
     return await client.personalInfo.upsert({
       where: { resume_id: resumeId },
       create: {
         resume_id: resumeId,
-        full_name: info.full_name || "",
-        profession: info.profession || "",
-        email: info.email || "",
-        phone: info.phone || "",
-        location: info.location || "",
-        linkedin: info.linkedin || "",
-        website: info.website || "",
-        image_url: info.image_url || ""
+        full_name: clean.full_name || "",
+        profession: clean.profession || "",
+        email: clean.email || "",
+        phone: clean.phone || "",
+        location: clean.location || "",
+        linkedin: clean.linkedin || "",
+        website: clean.website || "",
+        image_url: clean.image_url || ""
       },
       update: {
-        ...(info.full_name !== undefined && { full_name: info.full_name }),
-        ...(info.profession !== undefined && { profession: info.profession }),
-        ...(info.email !== undefined && { email: info.email }),
-        ...(info.phone !== undefined && { phone: info.phone }),
-        ...(info.location !== undefined && { location: info.location }),
-        ...(info.linkedin !== undefined && { linkedin: info.linkedin }),
-        ...(info.website !== undefined && { website: info.website }),
-        ...(info.image_url !== undefined && { image_url: info.image_url })
+        ...(clean.full_name !== undefined && { full_name: clean.full_name }),
+        ...(clean.profession !== undefined && { profession: clean.profession }),
+        ...(clean.email !== undefined && { email: clean.email }),
+        ...(clean.phone !== undefined && { phone: clean.phone }),
+        ...(clean.location !== undefined && { location: clean.location }),
+        ...(clean.linkedin !== undefined && { linkedin: clean.linkedin }),
+        ...(clean.website !== undefined && { website: clean.website }),
+        ...(clean.image_url !== undefined && { image_url: clean.image_url })
       }
     });
   } catch (error) {
@@ -163,13 +165,13 @@ export async function replaceExperiences(resumeId, experiences, client = prisma)
     if (experiences && experiences.length > 0) {
       const records = experiences.map((exp, index) => ({
         resume_id: resumeId,
-        position: exp.position !== undefined ? (typeof exp.position === "number" ? exp.position : index) : index,
-        company: exp.company || "",
-        job_title: exp.job_title || (typeof exp.position === "string" ? exp.position : "") || "",
-        start_date: exp.start_date || "",
-        end_date: exp.end_date || "",
+        position: typeof exp.position === "number" ? exp.position : (parseInt(exp.position, 10) || index),
+        company: cleanNullBytes(exp.company) || "",
+        job_title: cleanNullBytes(exp.job_title || (typeof exp.position === "string" ? exp.position : "")) || "",
+        start_date: cleanNullBytes(exp.start_date) || "",
+        end_date: cleanNullBytes(exp.end_date) || "",
         is_current: !!exp.is_current,
-        description: exp.description || ""
+        description: cleanNullBytes(exp.description) || ""
       }));
 
       await client.experience.createMany({
@@ -192,11 +194,11 @@ export async function replaceEducation(resumeId, educations, client = prisma) {
       const records = educations.map((edu, index) => ({
         resume_id: resumeId,
         position: typeof edu.position === "number" ? edu.position : index,
-        institution: edu.institution || "",
-        degree: edu.degree || "",
-        field: edu.field || "",
-        graduation_date: edu.graduation_date || "",
-        gpa: edu.gpa || ""
+        institution: cleanNullBytes(edu.institution) || "",
+        degree: cleanNullBytes(edu.degree) || "",
+        field: cleanNullBytes(edu.field) || "",
+        graduation_date: cleanNullBytes(edu.graduation_date) || "",
+        gpa: cleanNullBytes(edu.gpa) || ""
       }));
 
       await client.education.createMany({
@@ -219,9 +221,9 @@ export async function replaceProjects(resumeId, projects, client = prisma) {
       const records = projects.map((proj, index) => ({
         resume_id: resumeId,
         position: typeof proj.position === "number" ? proj.position : index,
-        name: proj.name || "",
-        type: proj.type || "",
-        description: proj.description || ""
+        name: cleanNullBytes(proj.name) || "",
+        type: cleanNullBytes(proj.type) || "",
+        description: cleanNullBytes(proj.description) || ""
       }));
 
       await client.project.createMany({
@@ -243,8 +245,8 @@ export async function replaceSkills(resumeId, skills, client = prisma) {
     if (skills && skills.length > 0) {
       const records = skills.map(sk => ({
         resume_id: resumeId,
-        skill_name: typeof sk === "string" ? sk : sk.skill_name || "",
-        proficiency: (typeof sk === "object" && sk.proficiency) || "intermediate"
+        skill_name: cleanNullBytes(typeof sk === "string" ? sk : sk.skill_name || ""),
+        proficiency: cleanNullBytes((typeof sk === "object" && sk.proficiency) || "intermediate")
       }));
 
       await client.skill.createMany({
