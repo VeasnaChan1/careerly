@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { logout } from '../app/features/authSlice';
-import { User, LogOut, LogIn, FileText } from 'lucide-react';
+import { User, LogOut, LogIn, FileText, Sparkles } from 'lucide-react';
 
 const NavbarDashboard = () => {
   const { user } = useSelector((state) => state.auth);
@@ -11,6 +11,7 @@ const NavbarDashboard = () => {
   const location = useLocation();
 
   const isMyCVsActive = location.pathname === '/app' || location.pathname === '/app/my-cvs';
+  const isInterviewActive = location.pathname.includes('/interview');
 
   const handleNavigation = (to, e) => {
     if (window.resumeBuilderDirty) {
@@ -49,8 +50,8 @@ const NavbarDashboard = () => {
             <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#F46200] translate-y-[-4px]" aria-hidden="true"></span>
           </Link>
 
-          {user && (
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            {user && (
               <Link
                 to="/app"
                 onClick={(e) => handleNavigation('/app', e)}
@@ -63,8 +64,21 @@ const NavbarDashboard = () => {
                 <FileText className="size-3.5" />
                 <span>My CVs</span>
               </Link>
-            </div>
-          )}
+            )}
+
+            <Link
+              to="/app/interview"
+              onClick={(e) => handleNavigation('/app/interview', e)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all ${
+                isInterviewActive
+                  ? 'bg-[#FFF3EB] text-[#F46200] border border-[#FAD7C0]'
+                  : 'text-[#5A554E] hover:text-[#F46200] hover:bg-slate-50'
+              }`}
+            >
+              <Sparkles className="size-3.5 text-[#F46200]" />
+              <span>Interview Prep</span>
+            </Link>
+          </div>
         </div>
 
         <div className="flex items-center gap-3 sm:gap-4 text-sm">

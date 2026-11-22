@@ -40,6 +40,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/interview" className="hover:text-[#2D2D2D] transition-colors">
+                  Interview Prep & STAR Guide
+                </Link>
+              </li>
+              <li>
                 <a href="/#how-it-works" className="hover:text-[#2D2D2D] transition-colors">
                   AI Suggestion Engine
                 </a>
@@ -78,6 +83,9 @@ export default function Footer() {
           <div className="flex items-center gap-6">
             <Link to="/app/builder/guest" className="hover:text-[#2D2D2D] transition-colors">
               Build my CV
+            </Link>
+            <Link to="/interview" className="hover:text-[#2D2D2D] transition-colors">
+              Interview Prep
             </Link>
             <a href="/#pricing" className="hover:text-[#2D2D2D] transition-colors">
               Pricing ($2.99/mo)
