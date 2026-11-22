@@ -14,11 +14,12 @@ const Layout = () => {
   }
   
 
-  // Allow access to CV Builder and Interview Preparation without requiring login
+  // Allow access to CV Builder, Interview Preparation, and Job Finder without requiring login
   const isBuilderRoute = location.pathname.includes('/builder');
   const isInterviewRoute = location.pathname.includes('/interview');
+  const isJobsRoute = location.pathname.includes('/jobs');
 
-  if (user || isBuilderRoute || isInterviewRoute) {
+  if (user || isBuilderRoute || isInterviewRoute || isJobsRoute) {
     return (
       <div className="min-h-screen bg-gray-50">
         <NavbarDashboard />

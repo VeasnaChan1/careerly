@@ -21,6 +21,12 @@ export default function Navbar() {
         { id: 'pricing', linkId: 'pricing' },
       ];
 
+      // If on jobs page, set active section
+      if (window.location.pathname.startsWith('/jobs')) {
+        setActiveSection('jobs');
+        return;
+      }
+
       // If on interview page, set active section
       if (window.location.pathname.startsWith('/interview')) {
         setActiveSection('interview');
@@ -53,9 +59,10 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
+    { label: 'Jobs', href: '/jobs', id: 'jobs', isRoute: true },
+    { label: 'Interview Prep', href: '/interview', id: 'interview', isRoute: true },
     { label: 'Features', href: '/#features', id: 'features' },
     { label: 'How it works', href: '/#how-it-works', id: 'how-it-works' },
-    { label: 'Interview Prep', href: '/interview', id: 'interview', isRoute: true },
     { label: 'Pricing', href: '/#pricing', id: 'pricing' },
   ];
 
