@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { logout } from '../app/features/authSlice';
-import { User, LogOut, LogIn, FileText, Sparkles } from 'lucide-react';
+import { User, LogOut, LogIn, FileText, Sparkles, Briefcase } from 'lucide-react';
 
 const NavbarDashboard = () => {
   const { user } = useSelector((state) => state.auth);
@@ -11,6 +11,7 @@ const NavbarDashboard = () => {
   const location = useLocation();
 
   const isMyCVsActive = location.pathname === '/app' || location.pathname === '/app/my-cvs';
+  const isJobsActive = location.pathname.includes('/jobs');
   const isInterviewActive = location.pathname.includes('/interview');
 
   const handleNavigation = (to, e) => {
@@ -65,6 +66,19 @@ const NavbarDashboard = () => {
                 <span>My CVs</span>
               </Link>
             )}
+
+            <Link
+              to="/app/jobs"
+              onClick={(e) => handleNavigation('/app/jobs', e)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all ${
+                isJobsActive
+                  ? 'bg-[#FFF3EB] text-[#F46200] border border-[#FAD7C0]'
+                  : 'text-[#5A554E] hover:text-[#F46200] hover:bg-slate-50'
+              }`}
+            >
+              <Briefcase className="size-3.5" />
+              <span>Jobs</span>
+            </Link>
 
             <Link
               to="/app/interview"

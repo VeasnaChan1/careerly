@@ -1,0 +1,222 @@
+export const sampleJobs = [
+  {
+    title: "Junior Full-Stack Developer",
+    company: "ABA Bank",
+    location: "Phnom Penh",
+    job_type: "Full-time",
+    salary_range: "$600 - $1,100 / mo",
+    description: "Join ABA Bank's Core Digital Banking team to develop and maintain high-traffic web applications for retail banking. You will collaborate with senior software architects and mobile engineers to design performant RESTful APIs, maintain database integrity, and deliver intuitive web experiences for hundreds of thousands of daily active users across Cambodia.",
+    requirements: "• Bachelor's degree in Computer Science, IT, or related degree from CADT, RUPP, ITC, or similar institution.\n• Proficiency in React, Node.js, and modern JavaScript / TypeScript.\n• Solid understanding of relational databases (PostgreSQL or MySQL).\n• Familiarity with Git version control, Docker containers, and CI/CD basics.\n• Good conversational English and clear Khmer communication skills.",
+    job_url: "https://www.ababank.com/careers/",
+    status: "open"
+  },
+  {
+    title: "Frontend React Developer",
+    company: "Wing Bank",
+    location: "Phnom Penh (Boeung Keng Kang)",
+    job_type: "Full-time",
+    salary_range: "$800 - $1,400 / mo",
+    description: "Wing Bank is seeking a passionate Frontend Developer to build next-generation merchant and consumer portals. You will build modular React component libraries, optimize web performance on mobile connections, and work closely with product designers to implement pixel-perfect, accessible user interfaces.",
+    requirements: "• 1-2 years experience with React.js, Tailwind CSS, and state management (Redux Toolkit or Zustand).\n• Experience integrating RESTful APIs and handling asynchronous data flows.\n• Strong eye for responsive mobile design and web performance.\n• Ability to write clean, maintainable, and well-tested code.",
+    job_url: "https://www.wingmoney.com/en/careers/",
+    status: "open"
+  },
+  {
+    title: "Data Analyst & BI Specialist",
+    company: "Smart Axiata",
+    location: "Phnom Penh",
+    job_type: "Full-time",
+    salary_range: "$700 - $1,200 / mo",
+    description: "Transform telecommunications and mobile data into actionable business intelligence. You will write complex SQL queries, build automated PowerBI dashboards, and collaborate with marketing and network operations teams to track customer retention, digital product adoption, and revenue metrics.",
+    requirements: "• Proficiency in SQL, Power BI or Tableau, and Excel data modeling.\n• Experience with Python or R for exploratory data analysis is a strong plus.\n• Strong analytical mindset and ability to communicate findings to non-technical stakeholders.\n• Fluency in English (both written and verbal).",
+    job_url: "https://www.smart.com.kh/about-us/careers/",
+    status: "open"
+  },
+  {
+    title: "Mobile App Developer (Flutter / React Native)",
+    company: "Cellcard (CamGSM)",
+    location: "Phnom Penh",
+    job_type: "Full-time",
+    salary_range: "$900 - $1,500 / mo",
+    description: "Develop, test, and maintain Cellcard's flagship loyalty and lifestyle applications on iOS and Android. You will collaborate with backend engineers to integrate telecom billing APIs, implement push notification workflows, and ensure high responsiveness on varied mobile devices.",
+    requirements: "• Experience building mobile applications using Flutter (Dart) or React Native.\n• Understanding of app store deployment guidelines (Apple App Store & Google Play Store).\n• Experience consuming RESTful JSON APIs and managing offline local storage.\n• Strong problem-solving mindset and eagerness to learn telecom architecture.",
+    job_url: "https://www.cellcard.com.kh/en/careers/",
+    status: "open"
+  },
+  {
+    title: "AI / NLP Research Assistant",
+    company: "CADT Innovation Center",
+    location: "Phnom Penh (Prek Leap)",
+    job_type: "Internship",
+    salary_range: "$300 - $500 / mo",
+    description: "Work alongside research faculty at the Cambodia Academy of Digital Technology (CADT) on Natural Language Processing datasets for Khmer language models. Responsibilities include data collection, dataset cleaning, fine-tuning open-source LLMs, and evaluating benchmark accuracy.",
+    requirements: "• Current Year 3 or Year 4 university student in Computer Science or Data Science.\n• Solid programming skills in Python (PyTorch, Hugging Face, or Pandas).\n• Passion for Khmer NLP, machine translation, or speech-to-text technologies.\n• Good academic reading comprehension in English.",
+    job_url: "https://cadt.edu.kh/careers/",
+    status: "open"
+  },
+  {
+    title: "Junior QA / Software Tester",
+    company: "Canadia Bank",
+    location: "Phnom Penh",
+    job_type: "Full-time",
+    salary_range: "$500 - $900 / mo",
+    description: "Ensure banking systems and web portals meet stringent quality, security, and compliance benchmarks. You will write manual test cases, execute regression suites, report bugs in Jira, and collaborate with developers to verify fixes before production release.",
+    requirements: "• Bachelor's degree in IT, MIS, or related field.\n• Understanding of software testing fundamentals (functional, regression, integration testing).\n• Basic knowledge of automated testing tools (Postman, Cypress, or Selenium) is an advantage.\n• Detail-oriented and methodical mindset with strong documentation skills.",
+    job_url: "https://www.canadiabank.com.kh/careers",
+    status: "open"
+  },
+  {
+    title: "IT Support & Network Associate",
+    company: "Chip Mong Group",
+    location: "Phnom Penh",
+    job_type: "Full-time",
+    salary_range: "$450 - $750 / mo",
+    description: "Provide hardware, software, and local network support across Chip Mong's retail and corporate offices. Maintain office workstations, configure routers and VPNs, manage employee email accounts, and troubleshoot day-to-day technical issues.",
+    requirements: "• Degree or diploma in Information Technology, Network Engineering, or CCNA certification.\n• Hands-on troubleshooting experience with Windows, macOS, and standard office peripherals.\n• Knowledge of TCP/IP, DNS, DHCP, VLANs, and basic firewall configurations.\n• Friendly customer-service attitude and prompt response time.",
+    job_url: "https://www.chipmong.com/careers",
+    status: "open"
+  },
+  {
+    title: "Digital Platform & Frontend Engineer",
+    company: "Khmerload (Mediaload)",
+    location: "Phnom Penh",
+    job_type: "Hybrid",
+    salary_range: "$650 - $1,050 / mo",
+    description: "Build fast, SEO-optimized web templates and mobile web feeds for Cambodia's most visited digital media network. You will collaborate with editorial staff to launch interactive story widgets, optimize Core Web Vitals, and integrate digital ad formats.",
+    requirements: "• Hands-on knowledge of HTML5, CSS3/Tailwind, JavaScript (ES6+), and Next.js or React.\n• Understanding of Core Web Vitals (LCP, CLS, FID) and web performance optimization.\n• Experience with Google Analytics and web advertising integration is a bonus.\n• Ability to work in a fast-paced media environment.",
+    job_url: "https://khmerload.com/careers",
+    status: "open"
+  },
+  {
+    title: "Junior Backend Engineer (Node.js / PostgreSQL)",
+    company: "Morodok Tech",
+    location: "Phnom Penh",
+    job_type: "Full-time",
+    salary_range: "$700 - $1,100 / mo",
+    description: "Design and implement scalable backend microservices for enterprise SaaS and logistics software. You will write clean Express / NestJS services, design database schemas with Prisma ORM, and implement secure JWT authentication mechanisms.",
+    requirements: "• Proficiency in Node.js, Express, and PostgreSQL.\n• Experience writing SQL queries, indexing, and ORM usage (Prisma, TypeORM, or Sequelize).\n• Understanding of REST API best practices, status codes, and error handling.\n• Familiarity with unit testing and API documentation tools (Swagger/Postman).",
+    job_url: "https://morodoktech.com/careers",
+    status: "open"
+  },
+  {
+    title: "Digital Inclusion & M&E Officer",
+    company: "UNDP Cambodia",
+    location: "Phnom Penh",
+    job_type: "Contract",
+    salary_range: "$1,200 - $1,800 / mo",
+    description: "Support digital transformation and youth economic empowerment initiatives across rural Cambodia. Coordinate technical workshops, track project performance indicators, draft English evaluation reports, and liaise with government partners and civil society.",
+    requirements: "• University degree in Development Studies, Public Policy, Computer Science, or Economics.\n• Minimum 2 years experience in project coordination, M&E, or international development.\n• Fluency in English and Khmer with exceptional professional writing skills.\n• Proficiency in data collection tools (KoboToolbox, ODK, Excel).",
+    job_url: "https://www.undp.org/cambodia/careers",
+    status: "open"
+  },
+  {
+    title: "Web Engineer (Next.js / TypeScript)",
+    company: "BookMeBus",
+    location: "Phnom Penh",
+    job_type: "Hybrid",
+    salary_range: "$800 - $1,300 / mo",
+    description: "Help hundreds of thousands of domestic and international travelers book buses, ferries, and private taxis across Southeast Asia. You will work on BookMeBus's high-conversion booking engine, passenger seat selection maps, and international payment gateways.",
+    requirements: "• Strong proficiency with Next.js, React, TypeScript, and modern CSS.\n• Experience with internationalization (i18n) and multi-currency checkouts.\n• Understanding of web performance, caching, and state management.\n• Enthusiastic team player with good English communication.",
+    job_url: "https://bookmebus.com/careers",
+    status: "open"
+  },
+  {
+    title: "Backend Platform Developer (Golang / Python)",
+    company: "Nham24",
+    location: "Phnom Penh",
+    job_type: "Full-time",
+    salary_range: "$900 - $1,600 / mo",
+    description: "Build real-time order dispatching and logistics routing algorithms for Nham24's food and express delivery network. You will design fault-tolerant microservices, handle WebSocket connections for live driver tracking, and scale systems during lunchtime traffic spikes.",
+    requirements: "• Experience with Golang, Python, or high-concurrency Node.js.\n• Familiarity with message queues (RabbitMQ, Kafka, or Redis Pub/Sub).\n• Solid understanding of geospatial queries and PostgreSQL PostGIS.\n• Passion for high-scale distributed systems and rapid prototyping.",
+    job_url: "https://nham24.com/careers",
+    status: "open"
+  },
+  {
+    title: "UI/UX Product Designer",
+    company: "Sala Tech",
+    location: "Phnom Penh",
+    job_type: "Hybrid",
+    salary_range: "$700 - $1,200 / mo",
+    description: "Design intuitive student information systems and high school guidance platforms for Cambodian youth. Conduct user interviews, build wireframes and interactive prototypes in Figma, and maintain a shared design system with our engineering team.",
+    requirements: "• Strong portfolio demonstrating end-to-end product design (web and mobile).\n• Mastery of Figma (components, autolayout, variables, and design tokens).\n• Empathy for local Cambodian user behaviors and accessibility needs.\n• Ability to collaborate closely with frontend developers during handoff.",
+    job_url: "https://sala.co/careers",
+    status: "open"
+  },
+  {
+    title: "Operations Data Coordinator",
+    company: "Foodpanda Cambodia",
+    location: "Phnom Penh",
+    job_type: "Part-time",
+    salary_range: "$350 - $550 / mo",
+    description: "Support the merchant operations department in auditing restaurant menus, tracking delivery partner efficiency, and updating regional catalog data. Ideal for university students looking for flexible hours while gaining experience in a fast-paced tech company.",
+    requirements: "• Currently enrolled university student or recent graduate.\n• High proficiency in Microsoft Excel / Google Sheets (vlookup, pivot tables).\n• High attention to detail and ability to work with large datasets accurately.\n• Good basic English and native Khmer.",
+    job_url: "https://www.foodpanda.com.kh/careers",
+    status: "open"
+  },
+  {
+    title: "Field Operations & Partner Specialist",
+    company: "Grab Cambodia",
+    location: "Phnom Penh",
+    job_type: "Full-time",
+    salary_range: "$600 - $950 / mo",
+    description: "Onboard new driver and merchant partners, conduct digital training on the Grab platform, and resolve operational bottlenecks. You will spend time in the field interacting with local entrepreneurs and helping them grow their businesses digitally.",
+    requirements: "• Bachelor's degree in Business, Communications, or related discipline.\n• Great interpersonal and presentation skills in Khmer; working proficiency in English.\n• Comfortable navigating mobile technology and troubleshooting app setups for drivers.\n• Energetic, self-motivated, and willing to travel locally in Phnom Penh.",
+    job_url: "https://www.grab.com/kh/careers/",
+    status: "open"
+  },
+  {
+    title: "Junior E-Commerce Software Engineer",
+    company: "Phsar Tech",
+    location: "Siem Reap",
+    job_type: "Remote",
+    salary_range: "$500 - $900 / mo",
+    description: "Work remotely from anywhere in Cambodia building e-commerce and retail management tools for local souvenir, hospitality, and artisanal businesses in Siem Reap. Develop modular web stores, integrate KHQR payments, and automate inventory syncing.",
+    requirements: "• Experience with JavaScript/TypeScript, React, and REST APIs.\n• Understanding of payment gateway integrations (Bakong KHQR, ABA PayWay).\n• Reliable internet connection and disciplined remote work habits.\n• Good communication and proactive problem-solving attitude.",
+    job_url: "https://phsartech.com/careers",
+    status: "open"
+  },
+  {
+    title: "Junior Fintech Security Analyst",
+    company: "Bakong Network Partner",
+    location: "Phnom Penh",
+    job_type: "Full-time",
+    salary_range: "$1,000 - $1,700 / mo",
+    description: "Monitor and safeguard national QR and interbank payment transactions. Perform security log audits, assist in vulnerability assessments, review API endpoints for OWASP Top 10 vulnerabilities, and maintain security incident documentation.",
+    requirements: "• Degree in Cybersecurity, Computer Science, or Network Engineering.\n• Understanding of cryptography (symmetric/asymmetric encryption, hashing, digital signatures).\n• Knowledge of web application security principles, penetration testing basics, and OWASP.\n• Strong analytical and investigative mindset with high ethical standards.",
+    job_url: "https://bakong.nbc.gov.kh/careers",
+    status: "open"
+  },
+  {
+    title: "Payment Systems DevOps Associate",
+    company: "Pi Pay",
+    location: "Phnom Penh",
+    job_type: "Full-time",
+    salary_range: "$850 - $1,400 / mo",
+    description: "Manage deployment pipelines and cloud infrastructure for Pi Pay's merchant acquiring platform. You will automate CI/CD workflows, monitor server uptime with Prometheus/Grafana, and configure AWS/Linux environments for high resilience.",
+    requirements: "• Familiarity with Linux server administration (Ubuntu/Debian) and Bash scripting.\n• Experience with Docker containerization and CI/CD tools (GitHub Actions or GitLab CI).\n• Basic understanding of cloud services (AWS or DigitalOcean) and database replication.\n• Eagerness to master Kubernetes and infrastructure-as-code (Terraform).",
+    job_url: "https://pipay.com/careers",
+    status: "open"
+  },
+  {
+    title: "Junior Web Developer",
+    company: "Siem Reap Digital Hub",
+    location: "Siem Reap",
+    job_type: "Full-time",
+    salary_range: "$400 - $700 / mo",
+    description: "Build responsive websites and digital brochures for hotels, travel agencies, and creative NGOs across Siem Reap province. Great opportunity for recent graduates to build real-world client websites with mentorship from experienced developers.",
+    requirements: "• Solid foundation in HTML, CSS/SCSS, JavaScript, and responsive design.\n• Experience with WordPress theme customization or modern headless CMS.\n• Willingness to learn React and modern frontend frameworks.\n• Based in Siem Reap or willing to relocate.",
+    job_url: "https://siemreapdigital.com/careers",
+    status: "open"
+  },
+  {
+    title: "IT & Information Systems Assistant",
+    company: "ActionAid Cambodia",
+    location: "Phnom Penh",
+    job_type: "Internship",
+    salary_range: "$250 - $400 / mo",
+    description: "Support ActionAid Cambodia's country office with information technology needs, cloud file systems (Microsoft 365), data backup management, and digital workshop tech setup. Suitable for final-year students looking to contribute to community development.",
+    requirements: "• University student in Information Technology or Computer Science.\n• Good foundational understanding of computer systems, networks, and Office 365.\n• Committed to community development and human rights principles.\n• Polite, eager to learn, and reliable.",
+    job_url: "https://cambodia.actionaid.org/jobs",
+    status: "open"
+  }
+];

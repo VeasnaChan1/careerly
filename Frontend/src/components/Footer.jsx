@@ -50,9 +50,9 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="/#features" className="hover:text-[#2D2D2D] transition-colors">
-                  Job Finder
-                </a>
+                <Link to="/jobs" className="hover:text-[#2D2D2D] transition-colors">
+                  Local Jobs Board
+                </Link>
               </li>
               <li>
                 <a href="/#pricing" className="hover:text-[#2D2D2D] transition-colors">
@@ -83,6 +83,9 @@ export default function Footer() {
           <div className="flex items-center gap-6">
             <Link to="/app/builder/guest" className="hover:text-[#2D2D2D] transition-colors">
               Build my CV
+            </Link>
+            <Link to="/jobs" className="hover:text-[#2D2D2D] transition-colors">
+              Jobs
             </Link>
             <Link to="/interview" className="hover:text-[#2D2D2D] transition-colors">
               Interview Prep
