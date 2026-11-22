@@ -20,6 +20,7 @@ import ResumeBuilder from './pages/ResumeBuilder';
 import Preview from './pages/Preview';
 import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
+import InterviewPrep from './pages/InterviewPrep';
 
 import api from './config/api';
 import { login, setLoading } from './app/features/authSlice';
@@ -127,6 +128,8 @@ export default function App() {
   useEffect(() => {
     if (location.pathname === '/' || location.pathname === '/about') {
       document.title = 'Careerly — Build your CV. Find your job. Ace your interview.';
+    } else if (location.pathname.startsWith('/interview') || location.pathname.startsWith('/app/interview')) {
+      document.title = 'Interview Preparation & Practice — Careerly';
     } else if (location.pathname.startsWith('/app/profile')) {
       document.title = 'My Profile — Careerly';
     } else if (location.pathname === '/app') {
@@ -169,11 +172,13 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPassword key={location.hash} />} />
         <Route path="/verify-email" element={<ResetPassword key={location.hash} verifyEmail />} />
         <Route path="/about" element={<Footer />} />
+        <Route path="/interview" element={<InterviewPrep publicMode={true} />} />
 
         {/* Dashboard and CV Builder Layout */}
         <Route path="app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="my-cvs" element={<Dashboard />} />
+          <Route path="interview" element={<InterviewPrep publicMode={false} />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
           <Route path="builder" element={<ResumeBuilder />} />
           <Route path="profile" element={<Profile />} />

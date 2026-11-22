@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FileText, CheckCircle2, Briefcase, MessageSquare, ArrowRight, Sparkles, Smartphone, Download } from 'lucide-react';
 
 export default function Features() {
@@ -159,7 +160,13 @@ export default function Features() {
 
               <div className="pt-4 mt-4 border-t border-[#EFECE6] flex items-center justify-between">
                 <span className="text-xs text-[#8A847C]">Instant feedback on your answers</span>
-                <span className="text-xs font-semibold text-[#F46200]">AI Mock Simulator</span>
+                <Link
+                  to="/interview"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#F46200] hover:text-[#DC5800]"
+                >
+                  <span>Practice Questions</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
 
