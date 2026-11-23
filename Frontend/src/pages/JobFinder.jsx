@@ -24,6 +24,7 @@ import toast from 'react-hot-toast';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import JobDetailsModal from '../components/JobDetailsModal';
 import { fetchJobs, getSavedJobIds, toggleSavedJobId } from '../services/jobApi';
 
 // Job Type Badge Component
@@ -520,100 +521,15 @@ export default function JobFinder({ publicMode = true }) {
             </div>
           )}
 
-          {/* JOB DETAILS MODAL / DRAWER */}
-          {activeJob && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-element">
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 border border-[#E7E2D8] shadow-2xl relative space-y-6"
-              >
-                {/* Close Button */}
-                <button
-                  type="button"
-                  onClick={() => setActiveJob(null)}
-                  className="absolute right-5 top-5 p-2 rounded-full border border-[#E7E2D8] text-[#5A554E] hover:text-[#2D2D2D] hover:bg-[#FAF8F4] transition-all cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-
-                {/* Job Header */}
-                <div className="space-y-3 pr-8">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-bold text-[#F46200] bg-[#FFF3EB] px-2.5 py-1 rounded-md border border-[#FAD7C0]">
-                      {activeJob.company}
-                    </span>
-                    <JobTypeBadge type={activeJob.job_type} />
-                  </div>
-
-                  <h2 className="font-serif text-2xl sm:text-3xl text-[#2D2D2D] leading-tight">
-                    {activeJob.title}
-                  </h2>
-
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-[#5A554E] pt-1">
-                    <span className="inline-flex items-center gap-1">
-                      <MapPin className="w-4 h-4 text-[#8A847C]" />
-                      {activeJob.location}
-                    </span>
-                    {activeJob.salary_range && (
-                      <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                        <DollarSign className="w-3.5 h-3.5" />
-                        {activeJob.salary_range}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Overview */}
-                <div className="space-y-2 pt-4 border-t border-[#E7E2D8]">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#2D2D2D]">
-                    About The Role
-                  </h4>
-                  <p className="text-sm text-[#5A554E] leading-relaxed whitespace-pre-line">
-                    {activeJob.description}
-                  </p>
-                </div>
-
-                {/* Requirements */}
-                {activeJob.requirements && (
-                  <div className="space-y-2 pt-4 border-t border-[#E7E2D8]">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#2D2D2D]">
-                      Key Requirements & Qualifications
-                    </h4>
-                    <div className="bg-[#FAF8F4] p-4 rounded-2xl border border-[#E7E2D8] text-xs sm:text-sm text-[#5A554E] leading-relaxed whitespace-pre-line">
-                      {activeJob.requirements}
-                    </div>
-                  </div>
-                )}
-
-                {/* Modal Footer / Apply CTAs */}
-                <div className="pt-6 border-t border-[#E7E2D8] flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <Link
-                    to="/app/builder/guest"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-[#F46200] bg-[#FFF3EB] border border-[#FAD7C0] hover:bg-[#F46200] hover:text-white transition-all shadow-xs"
-                  >
-                    <FileText className="w-3.5 h-3.5" />
-                    <span>Tailor My CV for This Role</span>
-                  </Link>
-
-                  {activeJob.job_url ? (
-                    <a
-                      href={activeJob.job_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold text-white bg-[#F46200] hover:bg-[#DC5800] transition-all shadow-xs cursor-pointer"
-                    >
-                      <span>Apply on Company Site</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  ) : (
-                    <span className="text-xs font-medium text-[#8A847C]">
-                      Contact company directly to apply
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
+          {/* JOB DETAILS MODAL */}
+          <JobDetailsModal
+            job={activeJob}
+            isOpen={Boolean(activeJob)}
+            onClose={() => setActiveJob(null)}
+            isSaved={activeJob ? savedJobIds.includes(activeJob.id) : false}
+            onToggleSave={handleToggleBookmark}
+            builderPath={publicMode ? '/app/builder/guest' : '/app/builder'}
+          />
 
         </div>
       </main>
