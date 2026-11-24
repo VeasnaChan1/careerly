@@ -433,8 +433,8 @@ export default function InterviewPrep({ publicMode = true }) {
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-[#E7E2D8]">
               <div className="max-w-2xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFF3EB] border border-[#FAD7C0] text-xs font-bold text-[#F46200] mb-3">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Interactive Interview Preparation & STAR Method</span>
+                  
+                  <span></span>
                 </div>
                 <h1 className="font-serif text-3xl sm:text-4xl text-[#2D2D2D] tracking-tight leading-snug">
                   Master your job interviews with confidence.
