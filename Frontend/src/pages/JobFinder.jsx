@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Briefcase,
   MapPin,
@@ -25,7 +25,7 @@ import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import JobDetailsModal from '../components/JobDetailsModal';
-import { fetchJobs, getSavedJobIds, toggleSavedJobId } from '../services/jobApi';
+import { fetchJobs, fetchJobById, getSavedJobIds, toggleSavedJobId } from '../services/jobApi';
 
 // Job Type Badge Component
 function JobTypeBadge({ type }) {
@@ -82,8 +82,12 @@ export default function JobFinder({ publicMode = true }) {
   // Bookmarks
   const [savedJobIds, setSavedJobIds] = useState([]);
 
-  // Selected Job for Detail Drawer / Modal
+  // Selected Job for Detail Modal
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeJob, setActiveJob] = useState(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
+  const detailRequestIdRef = useRef(0);
 
   // Load Saved Job IDs from localStorage
   useEffect(() => {
@@ -143,6 +147,75 @@ export default function JobFinder({ publicMode = true }) {
       }
     }
   };
+
+  // Open Job Details & fetch fresh record by ID
+  const openJobDetails = async (jobOrId) => {
+    const jobId = typeof jobOrId === 'string' ? jobOrId : jobOrId?.id;
+    const fallbackJob = typeof jobOrId === 'object' ? jobOrId : null;
+
+    if (!jobId) {
+      setActiveJob(fallbackJob);
+      setIsDetailOpen(true);
+      setIsDetailLoading(false);
+      return;
+    }
+
+    const requestId = ++detailRequestIdRef.current;
+    setIsDetailOpen(true);
+    setIsDetailLoading(true);
+    setActiveJob(fallbackJob);
+
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set('job', jobId);
+      return next;
+    }, { replace: true });
+
+    try {
+      const freshJob = await fetchJobById(jobId);
+      if (detailRequestIdRef.current !== requestId) return;
+      setActiveJob(freshJob || null);
+    } catch (error) {
+      if (detailRequestIdRef.current !== requestId) return;
+      if (error?.response?.status === 404) {
+        setActiveJob(null);
+      } else if (fallbackJob) {
+        setActiveJob(fallbackJob);
+        toast.error('Could not refresh full job details; showing cached summary.');
+      } else {
+        setActiveJob(null);
+        toast.error('Failed to load job details.');
+      }
+    } finally {
+      if (detailRequestIdRef.current === requestId) {
+        setIsDetailLoading(false);
+      }
+    }
+  };
+
+  const closeJobDetails = () => {
+    detailRequestIdRef.current += 1;
+    setIsDetailOpen(false);
+    setIsDetailLoading(false);
+    setActiveJob(null);
+
+    if (searchParams.has('job')) {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete('job');
+        return next;
+      }, { replace: true });
+    }
+  };
+
+  // Open job details automatically if ?job=<id> is in URL on mount
+  useEffect(() => {
+    const initialJobId = searchParams.get('job');
+    if (initialJobId) {
+      openJobDetails(initialJobId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Toggle Bookmark
   const handleToggleBookmark = (id, e) => {
@@ -386,7 +459,7 @@ export default function JobFinder({ publicMode = true }) {
                     /* Job Card: Satisfies Acceptance Criterion 1 (Title, Company, Location, Job Type) */
                     <div
                       key={job.id}
-                      onClick={() => setActiveJob(job)}
+                      onClick={() => openJobDetails(job)}
                       className="bg-white rounded-2xl p-6 border border-[#E7E2D8] hover:border-[#FAD7C0] hover:shadow-md transition-all duration-200 flex flex-col justify-between cursor-pointer group"
                     >
                       <div className="space-y-3.5">
@@ -524,8 +597,9 @@ export default function JobFinder({ publicMode = true }) {
           {/* JOB DETAILS MODAL */}
           <JobDetailsModal
             job={activeJob}
-            isOpen={Boolean(activeJob)}
-            onClose={() => setActiveJob(null)}
+            isOpen={isDetailOpen}
+            isLoading={isDetailLoading}
+            onClose={closeJobDetails}
             isSaved={activeJob ? savedJobIds.includes(activeJob.id) : false}
             onToggleSave={handleToggleBookmark}
             builderPath={publicMode ? '/app/builder/guest' : '/app/builder'}
