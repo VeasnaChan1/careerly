@@ -137,131 +137,168 @@ export const interviewGuide = {
 
 export const interviewTips = {
   title: "Essential Interview Checklist & Confidence Tips",
-  subtitle: "Step-by-step guidance before, during, and after your interview to turn anxiety into confidence.",
+  subtitle: "Short, confidence-building steps before, during, and after your interview to turn anxiety into composure.",
   stages: [
     {
       id: "before",
       name: "Before the Interview",
-      subtitle: "Preparation & Logistics (1 week to morning of)",
+      subtitle: "Preparation & Mindset (1 week to morning of)",
       badgeColor: "bg-blue-50 text-blue-700 border-blue-200",
+      confidenceBooster: "They reviewed your CV and chose to invite you. You already qualify — the interview is simply to meet the person behind the paper.",
       items: [
         {
           id: "before-research-company",
-          title: "Research the Company & Role",
-          description: "Study their website, products, recent news in Cambodia, and specific skills in the job post. Know at least one product feature or recent company initiative.",
+          title: "Research Company & Role Basics",
+          description: "Learn their mission, main products, and recent milestones. Identifying 1-2 reasons why you want to work there transforms nervousness into authentic enthusiasm.",
           category: "preparation",
-          timeframe: "2-3 days before"
+          timeframe: "2-3 days before",
+          format: "both"
         },
         {
           id: "before-review-cv",
-          title: "Know Your CV Inside Out",
-          description: "Review every bullet point and project on your CV. Be ready to explain your specific technical contributions without hesitation.",
+          title: "Know Your CV & Key Projects",
+          description: "Re-read your CV line-by-line. Pick 2-3 projects you are proud of so you can explain your individual contributions with confidence.",
           category: "preparation",
-          timeframe: "1-2 days before"
+          timeframe: "1-2 days before",
+          format: "both"
         },
         {
           id: "before-prepare-star",
-          title: "Prepare 2-3 STAR Stories",
-          description: "Prepare structured stories (Situation, Task, Action, Result) showcasing leadership, problem-solving, teamwork, and overcoming mistakes.",
+          title: "Rehearse 2-3 STAR Stories",
+          description: "Structure real examples using Situation, Task, Action (60%), and Result. Having go-to stories for challenges, teamwork, and leadership prevents freezing.",
           category: "practice",
-          timeframe: "2 days before"
+          timeframe: "2 days before",
+          format: "both"
         },
         {
           id: "before-prepare-questions",
-          title: "Prepare 2-3 Reverse Questions",
-          description: "Have thoughtful questions ready for the interviewer about engineering culture, 90-day expectations, and mentorship.",
+          title: "Prepare 2-3 Strategic Questions",
+          description: "Draft questions about team expectations, engineering culture, or 90-day goals. Remember: interviews are a mutual conversation, not a one-way test.",
           category: "preparation",
-          timeframe: "1 day before"
+          timeframe: "1 day before",
+          format: "both"
         },
         {
           id: "before-attire-logistics",
-          title: "Plan Attire & Travel / Tech Setup",
-          description: "For in-person: iron clean professional clothes and plan travel to arrive 10-15 minutes early. For online: test camera, microphone, stable internet, and quiet lighting.",
+          title: "Check Tech Setup & Travel Route",
+          description: "In-person: iron clean professional attire and plan to arrive 10-15 minutes early. Online: test camera, microphone, stable Wi-Fi, and quiet lighting.",
           category: "logistics",
-          timeframe: "Evening before"
+          timeframe: "Evening before",
+          format: "both"
         },
         {
           id: "before-rest-mindset",
-          title: "Rest & Morning Mindset Check",
-          description: "Get 7-8 hours of sleep. On the morning of, eat a light meal, hydrate, review your 1-page notes, and take 3 deep breaths.",
+          title: "Rest & Grounding Breath",
+          description: "Sleep 7-8 hours. On interview morning, hydrate, take 3 slow belly breaths, and remind yourself: they invited you because you belong in the room.",
           category: "mindset",
-          timeframe: "Morning of"
+          timeframe: "Morning of",
+          format: "both"
         }
       ]
     },
     {
       id: "during",
       name: "During the Interview",
-      subtitle: "Presence, Communication & STAR Delivery",
+      subtitle: "Presence, Delivery & Communication",
       badgeColor: "bg-[#FFF3EB] text-[#F46200] border-[#FAD7C0]",
+      confidenceBooster: "Silence is thinking, not stumbling. A calm 2-second breath before answering projects maturity and keeps your English steady.",
       items: [
         {
           id: "during-first-impression",
-          title: "Make a Strong First Impression",
-          description: "Start with a warm smile, confident eye contact, polite greeting, and professional posture. Look directly into the webcam on video calls.",
-          category: "presence"
+          title: "Warm Greeting & Confident Posture",
+          description: "Smile warmly, greet the interviewers by name, and sit upright with relaxed shoulders. On video calls, look into the camera lens to project natural eye contact.",
+          category: "presence",
+          timeframe: "First 60s",
+          format: "both"
         },
         {
           id: "during-pacing-breath",
-          title: "Pause 2 Seconds & Slow Your Pacing",
-          description: "Take a calm 2-second breath before answering each question. Non-native speakers often rush when nervous; steady pacing projects senior maturity.",
-          category: "communication"
+          title: "Pause 2 Seconds Before Answering",
+          description: "Take a calm 2-second breath before answering each question. Pausing shows senior composure and gives you space to organize your thoughts in English.",
+          category: "communication",
+          timeframe: "Throughout",
+          format: "both"
         },
         {
           id: "during-star-structure",
-          title: "Structure with the STAR Method",
-          description: "Keep Situation & Task brief (~25%). Focus 60% of your time on the concrete Actions YOU took, and end with measurable Results.",
-          category: "structure"
+          title: "Anchor Answers with STAR Method",
+          description: "Keep background brief (~25%). Focus 60% of your response on the specific actions YOU executed, and conclude with the tangible result.",
+          category: "structure",
+          timeframe: "Behavioral",
+          format: "both"
         },
         {
           id: "during-clarify-honesty",
-          title: "Ask to Clarify Politely & Stay Honest",
-          description: "If an English question or term is unclear, politely ask: 'Could you please clarify what you mean by X?' Never guess blindly. Be honest about what you know and don't know.",
-          category: "communication"
+          title: "Ask for Clarification Without Fear",
+          description: "If an English term or question is unclear, ask politely: 'Could you please clarify what you mean by X?' Asking shows active listening and maturity.",
+          category: "communication",
+          timeframe: "When needed",
+          format: "both"
+        },
+        {
+          id: "during-honest-problem-solving",
+          title: "Handle Unknowns with Curiosity",
+          description: "If you don't know an answer, don't guess blindly. Say: 'I haven't used that tool directly yet, but here is how I would approach investigating and solving it.'",
+          category: "mindset",
+          timeframe: "Technical",
+          format: "both"
         },
         {
           id: "during-ask-questions",
-          title: "Ask Your Thoughtful Questions",
-          description: "When invited to ask questions at the end, ask your prepared questions. It shows curiosity, professional engagement, and diligence.",
-          category: "engagement"
+          title: "Ask Your Prepared Questions",
+          description: "When invited at the end, ask your prepared questions. Asking thoughtful questions demonstrates ambition, engagement, and genuine interest in the team.",
+          category: "engagement",
+          timeframe: "Final 10m",
+          format: "both"
         }
       ]
     },
     {
       id: "after",
       name: "After the Interview",
-      subtitle: "Follow-up, Reflection & Momentum",
+      subtitle: "Follow-Up, Reflection & Momentum",
       badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
+      confidenceBooster: "Every interview makes you stronger. Celebrate your courage for stepping up, and let the process unfold while keeping your search momentum.",
       items: [
         {
           id: "after-closing-thanks",
-          title: "Express Closing Gratitude & Next Steps",
-          description: "Warmly thank the interviewers for their time, express genuine excitement, and ask: 'What are the next steps in your hiring process?'",
-          category: "closing"
+          title: "Warm Closing & Clarify Next Steps",
+          description: "Warmly thank the interviewers for their time, express enthusiasm for the role, and ask: 'What are the expected next steps in your hiring process?'",
+          category: "closing",
+          timeframe: "Wrap-up",
+          format: "both"
         },
         {
           id: "after-write-notes",
-          title: "Jot Down Immediate Reflection Notes",
-          description: "Within 30 minutes, write down the questions you were asked, what you answered well, and any technical gaps you need to brush up on.",
-          category: "reflection"
+          title: "5-Minute Immediate Reflection Notes",
+          description: "While details are fresh, jot down the questions asked, what went well, and areas to polish. Every interview makes you a sharper, stronger candidate.",
+          category: "reflection",
+          timeframe: "Within 30m",
+          format: "both"
         },
         {
           id: "after-thank-you-email",
-          title: "Send a Professional Thank-You Email",
-          description: "Within 24 hours, send a concise 3-4 sentence thank-you email referencing a specific topic discussed to reinforce your interest.",
-          category: "followup"
+          title: "Send a 24-Hour Thank-You Email",
+          description: "Send a concise 3-4 sentence thank-you note referencing one specific discussion topic from the call. Use our built-in copyable email template.",
+          category: "followup",
+          timeframe: "Within 24h",
+          format: "both"
         },
         {
-          id: "after-polite-followup",
-          title: "Follow Up Respectfully if Needed",
-          description: "If the stated decision timeline passes (usually 5-7 business days) without an update, send one polite status check email.",
-          category: "followup"
+          id: "after-celebrate-effort",
+          title: "Celebrate Your Effort & Courage",
+          description: "Take a moment to acknowledge your hard work. Interviewing in a professional setting takes courage—be proud of showing up and presenting your story.",
+          category: "mindset",
+          timeframe: "Same day",
+          format: "both"
         },
         {
           id: "after-keep-momentum",
-          title: "Keep Applying & Maintain Momentum",
-          description: "Never pause your job search for a single company until you have signed an official offer letter. Celebrate your effort and keep practicing.",
-          category: "mindset"
+          title: "Maintain Search Momentum",
+          description: "Never pause your job search for a single employer until an official offer letter is signed. Keep applying, networking, and practicing.",
+          category: "mindset",
+          timeframe: "Ongoing",
+          format: "both"
         }
       ]
     }
