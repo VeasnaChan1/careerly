@@ -3,7 +3,8 @@ import {
   getInterviewQuestions,
   getInterviewQuestionById,
   getInterviewCategories,
-  getInterviewGuide
+  getInterviewGuide,
+  getInterviewTips
 } from "../controllers/interviewController.js";
 
 export const interviewRouter = express.Router();
@@ -13,5 +14,6 @@ interviewRouter.get("/questions", getInterviewQuestions);
 interviewRouter.get("/questions/:id", getInterviewQuestionById);
 interviewRouter.get("/categories", getInterviewCategories);
 interviewRouter.get("/guide", getInterviewGuide);
+interviewRouter.get("/tips", getInterviewTips);
 
 export default interviewRouter;

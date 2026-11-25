@@ -239,14 +239,24 @@ export default function JobDetailsModal({
         {/* Sticky Footer / CTAs */}
         {!isLoading && job && (
           <div className="px-6 sm:px-8 py-4 bg-[#FAF8F4] border-t border-[#E7E2D8] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
-            <Link
-              to={builderPath}
-              onClick={onClose}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-[#F46200] bg-white border border-[#FAD7C0] hover:bg-[#FFF3EB] transition-all shadow-xs"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Tailor My CV for This Role</span>
-            </Link>
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <Link
+                to={builderPath}
+                onClick={onClose}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold text-[#F46200] bg-white border border-[#FAD7C0] hover:bg-[#FFF3EB] transition-all shadow-xs"
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>Tailor My CV</span>
+              </Link>
+              <Link
+                to="/interview/tips"
+                onClick={onClose}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-bold text-[#5A554E] bg-white border border-[#E7E2D8] hover:text-[#F46200] hover:border-[#FAD7C0] transition-all shadow-xs"
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#F46200]" />
+                <span>Interview Tips</span>
+              </Link>
+            </div>
 
             {job.job_url ? (
               <a

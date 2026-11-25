@@ -2,7 +2,8 @@ import prisma from "../db/prisma.js";
 import {
   interviewQuestions,
   interviewGuide,
-  interviewCategories
+  interviewCategories,
+  interviewTips
 } from "../data/interviewContent.js";
 
 // GET /api/interview/questions
@@ -185,13 +186,32 @@ export const getInterviewGuide = async (req, res) => {
   try {
     return res.status(200).json({
       success: true,
-      guide: interviewGuide
+      guide: {
+        ...interviewGuide,
+        tips: interviewTips
+      }
     });
   } catch (error) {
     console.error("Error fetching interview guide:", error);
     return res.status(500).json({
       success: false,
       message: "An error occurred while fetching the interview guide."
+    });
+  }
+};
+
+// GET /api/interview/tips
+export const getInterviewTips = async (req, res) => {
+  try {
+    return res.status(200).json({
+      success: true,
+      tips: interviewTips
+    });
+  } catch (error) {
+    console.error("Error fetching interview tips:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching interview tips."
     });
   }
 };

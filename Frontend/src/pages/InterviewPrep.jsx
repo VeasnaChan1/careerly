@@ -32,6 +32,7 @@ import toast from 'react-hot-toast';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import InterviewTips from './InterviewTips';
 import {
   getInterviewQuestions,
   getInterviewCategories,
@@ -169,8 +170,14 @@ export default function InterviewPrep({ publicMode = true }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Active Main Tab: 'bank' | 'practice' | 'guide'
+  // Active Main Tab: 'bank' | 'practice' | 'guide' | 'tips'
   const [activeTab, setActiveTab] = useState('bank');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    const basePath = publicMode ? '/interview' : '/app/interview';
+    navigate(`${basePath}?tab=${tab}`, { replace: true });
+  };
 
   // Question Data
   const [questions, setQuestions] = useState([]);
@@ -231,7 +238,7 @@ export default function InterviewPrep({ publicMode = true }) {
           const qIdParam = searchParams.get('id');
           const tabParam = searchParams.get('tab');
 
-          if (tabParam && ['bank', 'practice', 'guide'].includes(tabParam)) {
+          if (tabParam && ['bank', 'practice', 'guide', 'tips'].includes(tabParam)) {
             setActiveTab(tabParam);
           }
 
@@ -443,6 +450,17 @@ export default function InterviewPrep({ publicMode = true }) {
                   Curated questions asked by Cambodian tech firms, local commercial banks, and international NGOs. 
                   Learn how to structure answers with the STAR framework, build English fluency, and test yourself before your interview.
                 </p>
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleTabChange('tips')}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FAF8F4] border border-[#E7E2D8] text-xs font-semibold text-[#5A554E] hover:border-[#F46200] hover:text-[#F46200] transition-all cursor-pointer shadow-2xs"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#F46200]" />
+                    <span>View Interview Day Checklist (Before, During & After)</span>
+                    <ArrowRight className="w-3 h-3 text-[#F46200]" />
+                  </button>
+                </div>
               </div>
 
               {/* Progress Card */}
@@ -474,7 +492,7 @@ export default function InterviewPrep({ publicMode = true }) {
             <div className="pt-6 flex flex-wrap items-center gap-3">
               <button
                 type="button"
-                onClick={() => setActiveTab('bank')}
+                onClick={() => handleTabChange('bank')}
                 className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer ${
                   activeTab === 'bank'
                     ? 'bg-[#F46200] text-white shadow-xs'
@@ -487,7 +505,7 @@ export default function InterviewPrep({ publicMode = true }) {
 
               <button
                 type="button"
-                onClick={() => setActiveTab('practice')}
+                onClick={() => handleTabChange('practice')}
                 className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer ${
                   activeTab === 'practice'
                     ? 'bg-[#F46200] text-white shadow-xs'
@@ -500,7 +518,7 @@ export default function InterviewPrep({ publicMode = true }) {
 
               <button
                 type="button"
-                onClick={() => setActiveTab('guide')}
+                onClick={() => handleTabChange('guide')}
                 className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer ${
                   activeTab === 'guide'
                     ? 'bg-[#F46200] text-white shadow-xs'
@@ -509,6 +527,19 @@ export default function InterviewPrep({ publicMode = true }) {
               >
                 <Award className="w-4 h-4" />
                 <span>STAR Framework & Master Guide</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleTabChange('tips')}
+                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer ${
+                  activeTab === 'tips'
+                    ? 'bg-[#F46200] text-white shadow-xs'
+                    : 'bg-[#FAF8F4] text-[#5A554E] hover:text-[#2D2D2D] hover:bg-[#EFECE6] border border-[#E7E2D8]'
+                }`}
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Tips & Checklist</span>
               </button>
             </div>
           </div>
@@ -1089,6 +1120,27 @@ export default function InterviewPrep({ publicMode = true }) {
                     </li>
                   </ul>
                 </div>
+
+                {/* Day-of Checklist Callout */}
+                <div className="bg-[#FFF3EB] p-5 rounded-3xl border border-[#FAD7C0] space-y-3">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#F46200]" />
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#2D2D2D]">
+                      Interview Day Checklist
+                    </h4>
+                  </div>
+                  <p className="text-xs text-[#5A554E] leading-relaxed">
+                    Review our concise checklist for what to do before, during, and after your interview, including the 24h follow-up email template.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => handleTabChange('tips')}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white bg-[#F46200] hover:bg-[#DC5800] transition-all shadow-xs cursor-pointer w-full justify-center"
+                  >
+                    <span>Open Day-of Checklist</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -1276,6 +1328,37 @@ export default function InterviewPrep({ publicMode = true }) {
                   )}
                 </div>
               )}
+
+              {/* Day-of Checklist Callout Banner */}
+              <div className="bg-gradient-to-r from-[#FFF8F3] to-[#FAF8F4] rounded-3xl p-6 sm:p-8 border border-[#FAD7C0] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xs">
+                <div className="space-y-1">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#F46200] uppercase tracking-wider">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Interactive Day-of Preparation
+                  </span>
+                  <h3 className="font-serif text-xl sm:text-2xl text-[#2D2D2D] font-bold">
+                    Track Your Interview Readiness Step-by-Step
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#5A554E] max-w-xl">
+                    Check off items as you complete your company research, rehearse STAR stories, prepare strategic questions, and send your thank-you email.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleTabChange('tips')}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-bold text-white bg-[#F46200] hover:bg-[#DC5800] transition-all shadow-xs shrink-0 cursor-pointer"
+                >
+                  <span>Open Interactive Tips & Checklist</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: INTERVIEW TIPS & DAY-OF CHECKLIST */}
+          {activeTab === 'tips' && (
+            <div className="space-y-6">
+              <InterviewTips embedded={true} publicMode={publicMode} />
             </div>
           )}
 

@@ -135,6 +135,143 @@ export const interviewGuide = {
   }
 };
 
+export const interviewTips = {
+  title: "Essential Interview Checklist & Confidence Tips",
+  subtitle: "Step-by-step guidance before, during, and after your interview to turn anxiety into confidence.",
+  stages: [
+    {
+      id: "before",
+      name: "Before the Interview",
+      subtitle: "Preparation & Logistics (1 week to morning of)",
+      badgeColor: "bg-blue-50 text-blue-700 border-blue-200",
+      items: [
+        {
+          id: "before-research-company",
+          title: "Research the Company & Role",
+          description: "Study their website, products, recent news in Cambodia, and specific skills in the job post. Know at least one product feature or recent company initiative.",
+          category: "preparation",
+          timeframe: "2-3 days before"
+        },
+        {
+          id: "before-review-cv",
+          title: "Know Your CV Inside Out",
+          description: "Review every bullet point and project on your CV. Be ready to explain your specific technical contributions without hesitation.",
+          category: "preparation",
+          timeframe: "1-2 days before"
+        },
+        {
+          id: "before-prepare-star",
+          title: "Prepare 2-3 STAR Stories",
+          description: "Prepare structured stories (Situation, Task, Action, Result) showcasing leadership, problem-solving, teamwork, and overcoming mistakes.",
+          category: "practice",
+          timeframe: "2 days before"
+        },
+        {
+          id: "before-prepare-questions",
+          title: "Prepare 2-3 Reverse Questions",
+          description: "Have thoughtful questions ready for the interviewer about engineering culture, 90-day expectations, and mentorship.",
+          category: "preparation",
+          timeframe: "1 day before"
+        },
+        {
+          id: "before-attire-logistics",
+          title: "Plan Attire & Travel / Tech Setup",
+          description: "For in-person: iron clean professional clothes and plan travel to arrive 10-15 minutes early. For online: test camera, microphone, stable internet, and quiet lighting.",
+          category: "logistics",
+          timeframe: "Evening before"
+        },
+        {
+          id: "before-rest-mindset",
+          title: "Rest & Morning Mindset Check",
+          description: "Get 7-8 hours of sleep. On the morning of, eat a light meal, hydrate, review your 1-page notes, and take 3 deep breaths.",
+          category: "mindset",
+          timeframe: "Morning of"
+        }
+      ]
+    },
+    {
+      id: "during",
+      name: "During the Interview",
+      subtitle: "Presence, Communication & STAR Delivery",
+      badgeColor: "bg-[#FFF3EB] text-[#F46200] border-[#FAD7C0]",
+      items: [
+        {
+          id: "during-first-impression",
+          title: "Make a Strong First Impression",
+          description: "Start with a warm smile, confident eye contact, polite greeting, and professional posture. Look directly into the webcam on video calls.",
+          category: "presence"
+        },
+        {
+          id: "during-pacing-breath",
+          title: "Pause 2 Seconds & Slow Your Pacing",
+          description: "Take a calm 2-second breath before answering each question. Non-native speakers often rush when nervous; steady pacing projects senior maturity.",
+          category: "communication"
+        },
+        {
+          id: "during-star-structure",
+          title: "Structure with the STAR Method",
+          description: "Keep Situation & Task brief (~25%). Focus 60% of your time on the concrete Actions YOU took, and end with measurable Results.",
+          category: "structure"
+        },
+        {
+          id: "during-clarify-honesty",
+          title: "Ask to Clarify Politely & Stay Honest",
+          description: "If an English question or term is unclear, politely ask: 'Could you please clarify what you mean by X?' Never guess blindly. Be honest about what you know and don't know.",
+          category: "communication"
+        },
+        {
+          id: "during-ask-questions",
+          title: "Ask Your Thoughtful Questions",
+          description: "When invited to ask questions at the end, ask your prepared questions. It shows curiosity, professional engagement, and diligence.",
+          category: "engagement"
+        }
+      ]
+    },
+    {
+      id: "after",
+      name: "After the Interview",
+      subtitle: "Follow-up, Reflection & Momentum",
+      badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
+      items: [
+        {
+          id: "after-closing-thanks",
+          title: "Express Closing Gratitude & Next Steps",
+          description: "Warmly thank the interviewers for their time, express genuine excitement, and ask: 'What are the next steps in your hiring process?'",
+          category: "closing"
+        },
+        {
+          id: "after-write-notes",
+          title: "Jot Down Immediate Reflection Notes",
+          description: "Within 30 minutes, write down the questions you were asked, what you answered well, and any technical gaps you need to brush up on.",
+          category: "reflection"
+        },
+        {
+          id: "after-thank-you-email",
+          title: "Send a Professional Thank-You Email",
+          description: "Within 24 hours, send a concise 3-4 sentence thank-you email referencing a specific topic discussed to reinforce your interest.",
+          category: "followup"
+        },
+        {
+          id: "after-polite-followup",
+          title: "Follow Up Respectfully if Needed",
+          description: "If the stated decision timeline passes (usually 5-7 business days) without an update, send one polite status check email.",
+          category: "followup"
+        },
+        {
+          id: "after-keep-momentum",
+          title: "Keep Applying & Maintain Momentum",
+          description: "Never pause your job search for a single company until you have signed an official offer letter. Celebrate your effort and keep practicing.",
+          category: "mindset"
+        }
+      ]
+    }
+  ],
+  thankYouTemplate: {
+    subject: "Thank you - [Your Name] - [Position Title] Interview",
+    body: "Dear [Interviewer Name],\n\nThank you very much for your time today to discuss the [Position Title] role at [Company Name]. I really enjoyed learning more about [specific topic or challenge discussed, e.g. the team's upcoming dashboard redesign].\n\nOur conversation reinforced my enthusiasm for the position, and I am confident that my experience with [1-2 key skills, e.g. React and API integration] will allow me to contribute positively to the team.\n\nPlease let me know if you need any additional samples or information. I look forward to hearing about the next steps.\n\nWarm regards,\n[Your Name]\n[Your Phone Number] | [Your LinkedIn]"
+  }
+};
+
 export const interviewQuestions = [
   // ----------------------------------------------------
   // 1. BEHAVIORAL & STAR (6 questions)

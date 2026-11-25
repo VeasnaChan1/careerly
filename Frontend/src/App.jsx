@@ -21,6 +21,7 @@ import Preview from './pages/Preview';
 import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
 import InterviewPrep from './pages/InterviewPrep';
+import InterviewTips from './pages/InterviewTips';
 import JobFinder from './pages/JobFinder';
 
 import api from './config/api';
@@ -131,6 +132,8 @@ export default function App() {
       document.title = 'Careerly — Build your CV. Find your job. Ace your interview.';
     } else if (location.pathname.startsWith('/jobs') || location.pathname.startsWith('/app/jobs')) {
       document.title = 'Jobs in Cambodia — Careerly';
+    } else if (location.pathname.startsWith('/interview/tips') || location.pathname.startsWith('/app/interview/tips')) {
+      document.title = 'Interview Checklist & Tips — Careerly';
     } else if (location.pathname.startsWith('/interview') || location.pathname.startsWith('/app/interview')) {
       document.title = 'Interview Preparation & Practice — Careerly';
     } else if (location.pathname.startsWith('/app/profile')) {
@@ -177,6 +180,7 @@ export default function App() {
         <Route path="/about" element={<Footer />} />
         <Route path="/jobs" element={<JobFinder publicMode={true} />} />
         <Route path="/interview" element={<InterviewPrep publicMode={true} />} />
+        <Route path="/interview/tips" element={<InterviewTips publicMode={true} />} />
 
         {/* Dashboard and CV Builder Layout */}
         <Route path="app" element={<Layout />}>
@@ -184,6 +188,7 @@ export default function App() {
           <Route path="my-cvs" element={<Dashboard />} />
           <Route path="jobs" element={<JobFinder publicMode={false} />} />
           <Route path="interview" element={<InterviewPrep publicMode={false} />} />
+          <Route path="interview/tips" element={<InterviewTips publicMode={false} />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
           <Route path="builder" element={<ResumeBuilder />} />
           <Route path="profile" element={<Profile />} />

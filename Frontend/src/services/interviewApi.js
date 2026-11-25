@@ -142,3 +142,59 @@ export const savePracticeAnswer = (id, answerText, selfRating = null) => {
     return {};
   }
 };
+
+/**
+ * Fetch stage-by-stage Interview Tips and Checklist (Before, During, After)
+ */
+export const getInterviewTips = async () => {
+  try {
+    const response = await api.get('/api/interview/tips');
+    if (response.data && response.data.success) {
+      return response.data.tips;
+    }
+    // Fallback: try from guide endpoint
+    const guideRes = await api.get('/api/interview/guide');
+    if (guideRes.data?.guide?.tips) {
+      return guideRes.data.guide.tips;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error in getInterviewTips:', error.message);
+    throw error;
+  }
+};
+
+/**
+ * Local storage helpers for Interview Tips Checklist
+ */
+const STORAGE_CHECKLIST_KEY = 'careerly_interview_checklist_completed';
+
+export const getCompletedChecklistItems = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_CHECKLIST_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+};
+
+export const toggleChecklistItem = (id) => {
+  try {
+    const list = getCompletedChecklistItems();
+    const exists = list.includes(id);
+    const updated = exists ? list.filter((item) => item !== id) : [...list, id];
+    localStorage.setItem(STORAGE_CHECKLIST_KEY, JSON.stringify(updated));
+    return updated;
+  } catch (e) {
+    return [];
+  }
+};
+
+export const resetChecklist = () => {
+  try {
+    localStorage.removeItem(STORAGE_CHECKLIST_KEY);
+    return [];
+  } catch (e) {
+    return [];
+  }
+};
