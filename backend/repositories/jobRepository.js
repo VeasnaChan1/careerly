@@ -16,5 +16,6 @@ export const findJobById = (id) =>
       contact_email: true,
       status: true,
       created_at: true,
+      
     },
   });
