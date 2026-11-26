@@ -8,6 +8,7 @@ import { resumeRouter } from "./routes/resumeRoute.js";
 import { aiRouter } from "./routes/aiRoute.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
+import jobRouter from './routes/jobRoute.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use("/api/users", userRouter);
 app.use("/api/resumes", resumeRouter);
 app.use("/api/ai", aiRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/jobs', jobRouter); 
 
 async function startServer() {
   try {
