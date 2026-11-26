@@ -11,7 +11,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Form states
+  
   const [name, setName] = useState(user?.name || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
