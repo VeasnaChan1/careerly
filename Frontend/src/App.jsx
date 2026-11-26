@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 
 import Navbar from './components/Navbar';
@@ -19,6 +19,7 @@ import Dashboard from './pages/Dashboard';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Preview from './pages/Preview';
 import Profile from './pages/Profile';
+import JobDetail from './pages/JobDetail';
 
 import api from './config/api';
 import { login, setLoading } from './app/features/authSlice';
@@ -137,6 +138,7 @@ export default function App() {
 
         {/* Public view for shared resume links */}
         <Route path="view/:resumeId" element={<Preview />} />
+        <Route path="/jobs/:jobId" element={<JobDetail />} />
       </Routes>
     </>
   );
