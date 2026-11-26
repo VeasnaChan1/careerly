@@ -2,7 +2,7 @@
 
 Parent story: SCRUM-56 — Practice interview questions  
 Prepared: 24 November 2026  
-Status: Planning complete; content preparation has not started.
+Status: Implemented and awaiting teammate content review.
 
 ## Goal
 
@@ -10,8 +10,9 @@ Prepare a reviewed question bank for Careerly covering General, Behavioral,
 Technical, and Questions to Ask Employers. Each question must have a useful
 sample answer or guidance before it is handed over for implementation.
 
-This commit delivers the plan only. It does not add the question bank, application
-code, API endpoints, database changes, UI, or AI integration.
+Careerly shows the question bank at `/app/interview-prep`, linked from the
+signed-in dashboard. The frontend bundles the curated content, so the categories,
+questions, and answers are available as soon as the page opens.
 
 ## Proposed deliverable
 
@@ -56,10 +57,9 @@ Use the same fields for every entry so later integration is straightforward.
    documentation when drafting. Have a teammate review the full bank and resolve
    corrections. Example experiences must be clearly illustrative; encourage users
    to replace them with their own facts.
-5. **Prepare the handoff.** Put the reviewed entries in the proposed
-   `backend/data/interviewQuestions.js` module as static data. Match its export
-   convention with the developer implementing the read endpoints. No database or
-   runtime AI generation is needed for this curated content subtask.
+5. **Prepare the handoff.** Keep the entries in
+   `Frontend/src/data/interviewQuestions.js`. Update this module when content
+   changes and rebuild the frontend to ship the updated bank.
 6. **Validate and record evidence.** Check the count per category, unique IDs,
    allowed categories, required fields, and useful guidance for every entry.
    Record the reviewer and resolved feedback in the eventual content PR.
@@ -70,14 +70,14 @@ every entry before acceptance; browsing the final bank should not require AI.
 ## Completion checklist for SCRUM-102
 
 - [ ] Content count and technical audience are agreed.
-- [ ] All four categories contain the agreed number of distinct questions.
+- [x] All four categories contain five distinct questions each.
 - [ ] Every applicant question has guidance and a reviewed sample answer.
-- [ ] Every employer question explains its purpose and what to listen for.
-- [ ] Behavioral examples follow STAR and suit early-career applicants.
-- [ ] Technical explanations have been checked for accuracy.
-- [ ] All entries follow the agreed structure and have unique, stable IDs.
+- [x] Every employer question explains its purpose and what to listen for.
+- [x] Behavioral examples follow STAR and suit early-career applicants.
+- [x] Technical explanations have been checked against reference documentation.
+- [x] All entries follow the planned structure and have unique, stable IDs.
 - [ ] A teammate has reviewed the content and corrections are resolved.
-- [ ] The reviewed bank is committed and ready for the UI/API subtasks.
+- [ ] The reviewed bank is committed.
 
 ## Git and Jira progress
 
@@ -88,12 +88,17 @@ actually completed:
 - Future content commit: `docs(SCRUM-102): add reviewed interview question bank`
 - Future review corrections, if needed: `docs(SCRUM-102): refine answers after content review`
 
-Only the planning commit is intended now. A commit records progress; it does not
-by itself meet this subtask's completion criteria. Keep SCRUM-102 in To Do or In
-Progress according to the team's workflow until the content checklist is complete.
+A teammate still needs to review the content before the team marks SCRUM-102 Done.
 
 Suggested Jira progress note:
 
-> Prepared the content plan for all four interview categories, including the
-> proposed question count, entry structure, review steps, and completion criteria.
-> Questions and sample answers are not yet prepared; no feature code was changed.
+> Implemented the 20-question bank and Interview Prep page. The first answer or
+> guide is open when a category is selected, and the content is bundled with the
+> frontend. Teammate content review is pending.
+
+## Technical references
+
+- HTTP requests, responses, and access checks. [MDN HTTP overview](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview) and [MDN HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication)
+- Inner and left joins. [PostgreSQL documentation](https://www.postgresql.org/docs/current/tutorial-join.html)
+- Branches and pull requests. [Git documentation](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging) and [GitHub pull request documentation](https://docs.github.com/en/pull-requests/reference/pull-requests)
+- Inspecting requests during debugging. [Chrome DevTools Network panel](https://developer.chrome.com/docs/devtools/network)

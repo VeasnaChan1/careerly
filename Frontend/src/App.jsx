@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 
 import Navbar from './components/Navbar';
@@ -16,6 +16,7 @@ import LenisScroll from './components/lenis-scroll';
 
 import Layout from './pages/Layout';
 import Dashboard from './pages/Dashboard';
+import InterviewPrep from './pages/InterviewPrep';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Preview from './pages/Preview';
 import Profile from './pages/Profile';
@@ -83,33 +84,26 @@ export default function App() {
   const location = useLocation();
   const [currentHash, setCurrentHash] = useState(() => window.location.hash);
 
-  const getUserData = async () => {
-    const token = localStorage.getItem('token');
-    try {
-      if (token) {
-        const { data } = await api.get('/api/users/data', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        dispatch(
-          login({
-            token,
-            user: data
-          })
-        );
-      }
-    } catch (error) {
-      console.error('Failed to fetch user data:', error.message);
-      localStorage.removeItem('token');
-    } finally {
-      dispatch(setLoading(false));
-    }
-  };
-
   useEffect(() => {
+    const getUserData = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        if (token) {
+          const { data } = await api.get('/api/users/data', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          dispatch(login({ token, user: data }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error.message);
+        localStorage.removeItem('token');
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+
     getUserData();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -129,6 +123,8 @@ export default function App() {
       document.title = 'Careerly — Build your CV. Find your job. Ace your interview.';
     } else if (location.pathname.startsWith('/app/profile')) {
       document.title = 'My Profile — Careerly';
+    } else if (location.pathname === '/app/interview-prep') {
+      document.title = 'Interview Prep - Careerly';
     } else if (location.pathname === '/app') {
       document.title = 'Dashboard — Careerly';
     }
@@ -182,6 +178,7 @@ export default function App() {
         <Route path="app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="my-cvs" element={<Dashboard />} />
+          <Route path="interview-prep" element={<InterviewPrep />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
           <Route path="builder" element={<ResumeBuilder />} />
           <Route path="profile" element={<Profile />} />
