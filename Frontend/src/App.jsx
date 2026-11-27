@@ -18,6 +18,7 @@ import Layout from './pages/Layout';
 import Dashboard from './pages/Dashboard';
 import InterviewPractice from './pages/InterviewPractice';
 import InterviewPrep from './pages/InterviewPrep';
+import InterviewGuide from './pages/InterviewGuide';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Preview from './pages/Preview';
 import Profile from './pages/Profile';
@@ -125,6 +126,8 @@ export default function App() {
       document.title = 'Careerly — Build your CV. Find your job. Ace your interview.';
     } else if (location.pathname.startsWith('/jobs') || location.pathname.startsWith('/app/jobs')) {
       document.title = 'Jobs in Cambodia — Careerly';
+    } else if (location.pathname === '/interview-guide' || location.pathname === '/app/interview-guide') {
+      document.title = 'Interview Guide — Careerly';
     } else if (location.pathname === '/app/interview-prep') {
       document.title = 'Interview Prep - Careerly';
     } else if (location.pathname.startsWith('/interview') || location.pathname.startsWith('/app/interview')) {
@@ -181,12 +184,14 @@ export default function App() {
         <Route path="/about" element={<Footer />} />
         <Route path="/jobs" element={<JobFinder publicMode={true} />} />
         <Route path="/interview" element={<InterviewPractice publicMode />} />
+        <Route path="/interview-guide" element={<InterviewGuide publicMode />} />
 
         {/* Dashboard and CV Builder Layout */}
         <Route path="app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="my-cvs" element={<Dashboard />} />
           <Route path="interview-prep" element={<InterviewPrep />} />
+          <Route path="interview-guide" element={<InterviewGuide publicMode={false} />} />
           <Route path="jobs" element={<JobFinder publicMode={false} />} />
           <Route path="interview" element={<InterviewPractice publicMode={false} />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
