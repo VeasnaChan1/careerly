@@ -21,7 +21,7 @@ function QuestionDetails({ question }) {
       {question.sampleAnswer && (
         <div className="rounded-xl border border-[#F0DDD0] bg-[#FFF8F2] px-4 py-3 sm:px-5 sm:py-4">
           <h4 className="font-semibold text-[#2D2D2D]">{question.category === 'technical' ? 'Example explanation' : 'Sample answer'}</h4>
-          <p className="mt-2 whitespace-pre-line">{question.sampleAnswer}</p>
+          <p className="mt-2 whitespace-pre-line text-[#3E3730]">{question.sampleAnswer}</p>
           {question.category !== 'technical' && (
             <p className="mt-3 text-xs text-[#655A50]">Use this example as a guide and share details from your own experience.</p>
           )}
@@ -54,6 +54,7 @@ function CategoryQuestions({ category }) {
           {questions.map((question) => {
             const isOpen = openQuestion === question.id;
             const panelId = `${question.id}-details`;
+            const detailLabel = question.sampleAnswer ? 'answer' : 'guidance';
 
             return (
               <li key={question.id}>
@@ -63,7 +64,7 @@ function CategoryQuestions({ category }) {
                     aria-expanded={isOpen}
                     aria-controls={panelId}
                     onClick={() => setOpenQuestion(isOpen ? null : question.id)}
-                    className={`flex w-full cursor-pointer flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-4 text-left hover:bg-[#FAF8F4] focus-visible:outline-offset-[-2px] sm:px-6 ${focusStyle}`}
+                    className={`flex w-full cursor-pointer flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4 text-left hover:bg-[#FAF8F4] focus-visible:outline-offset-[-2px] sm:px-6 ${focusStyle} ${isOpen ? 'bg-[#FAF8F4]' : ''}`}
                   >
                     <span className="min-w-0 flex-1 basis-44 text-sm font-semibold leading-6 sm:text-base">
                       {question.question}
@@ -71,12 +72,12 @@ function CategoryQuestions({ category }) {
                         <span className="block text-xs font-medium leading-5 text-[#655A50]">{question.tags.join(', ')}</span>
                       )}
                     </span>
-                    <span aria-hidden="true" className="shrink-0 text-xs font-semibold text-[#AD4500]">
-                      {isOpen ? 'Hide' : category.id === 'employer' ? 'View guidance' : 'View answer'}
+                    <span aria-hidden="true" className="shrink-0 rounded-md bg-[#FFF0E5] px-2.5 py-1 text-xs font-semibold text-[#AD4500]">
+                      {isOpen ? 'Hide' : 'View'} {detailLabel}
                     </span>
                   </button>
                 </h3>
-                <div id={panelId} hidden={!isOpen} className="px-4 pb-5 sm:px-6">
+                <div id={panelId} hidden={!isOpen} className="border-t border-[#E7E2D8] px-4 py-5 sm:px-6">
                   {isOpen && <QuestionDetails question={question} />}
                 </div>
               </li>
