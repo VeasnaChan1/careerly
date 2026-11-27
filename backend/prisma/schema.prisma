@@ -157,6 +157,7 @@ model Job {
   description         String?             @db.Text
   requirements        String?             @db.Text
   job_url             String?             @db.Text
+  contact_email       String?             @db.VarChar(255)
   status              String?             @default("open") @db.VarChar(50)
   created_at          DateTime            @default(now())
   updated_at          DateTime            @default(now()) @updatedAt

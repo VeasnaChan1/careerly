@@ -1,4 +1,3 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../app/features/authSlice';
@@ -47,13 +46,22 @@ const NavbarDashboard = () => {
           </Link>
 
           {user && (
-            <Link
-              to="/app"
-              onClick={(e) => handleNavigation('/app', e)}
-              className="hidden sm:inline-flex text-xs font-semibold uppercase tracking-wider text-[#5A554E] hover:text-[#F46200] transition-colors"
-            >
-              Dashboard
-            </Link>
+            <>
+              <Link
+                to="/app"
+                onClick={(e) => handleNavigation('/app', e)}
+                className="hidden sm:inline-flex text-xs font-semibold uppercase tracking-wider text-[#5A554E] hover:text-[#F46200] transition-colors"
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/app/jobs"
+                onClick={(e) => handleNavigation('/app/jobs', e)}
+                className="hidden sm:inline-flex text-xs font-semibold uppercase tracking-wider text-[#5A554E] hover:text-[#F46200] transition-colors"
+              >
+                Jobs
+              </Link>
+            </>
           )}
         </div>
 

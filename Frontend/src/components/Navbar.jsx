@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -50,6 +50,7 @@ export default function Navbar() {
     { label: 'Features', href: '/#features', id: 'features' },
     { label: 'How it works', href: '/#how-it-works', id: 'how-it-works' },
     { label: 'Pricing', href: '/#pricing', id: 'pricing' },
+    { label: 'Jobs', to: '/jobs', id: 'jobs' },
   ];
 
   const handleNavClick = (e, targetId) => {
@@ -118,18 +119,28 @@ export default function Navbar() {
           <nav className="hidden md:flex items-center gap-1 sm:gap-1.5 lg:gap-2" aria-label="Main Navigation">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
+              const linkClass = `relative font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#F46200] ${
+                isScrolled ? 'text-xs sm:text-sm px-3.5 py-1.5' : 'text-sm px-3.5 py-2'
+              } ${
+                isActive
+                  ? 'text-[#F46200] font-semibold bg-[#FFF3EB] shadow-xs ring-1 ring-[#F46200]/25'
+                  : 'text-[#5A554E] hover:text-[#F46200] hover:bg-black/[0.04] active:bg-black/[0.07]'
+              }`;
+
+              if (link.to) {
+                return (
+                  <Link key={link.label} to={link.to} className={linkClass}>
+                    <span>{link.label}</span>
+                  </Link>
+                );
+              }
+
               return (
                 <a
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.id)}
-                  className={`relative font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#F46200] ${
-                    isScrolled ? 'text-xs sm:text-sm px-3.5 py-1.5' : 'text-sm px-3.5 py-2'
-                  } ${
-                    isActive
-                      ? 'text-[#F46200] font-semibold bg-[#FFF3EB] shadow-xs ring-1 ring-[#F46200]/25'
-                      : 'text-[#5A554E] hover:text-[#F46200] hover:bg-black/[0.04] active:bg-black/[0.07]'
-                  }`}
+                  className={linkClass}
                 >
                   <span>{link.label}</span>
                   {isActive && (
@@ -204,16 +215,31 @@ export default function Navbar() {
           <nav className="flex flex-col space-y-2">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
+              const mobileLinkClass = `text-base font-medium px-3.5 py-2.5 rounded-xl transition-colors flex items-center justify-between ${
+                isActive
+                  ? 'text-[#F46200] font-semibold bg-[#FFF3EB] border border-[#F46200]/20'
+                  : 'text-[#2D2D2D] hover:text-[#F46200] hover:bg-black/[0.03]'
+              }`;
+
+              if (link.to) {
+                return (
+                  <Link
+                    key={link.label}
+                    to={link.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={mobileLinkClass}
+                  >
+                    <span>{link.label}</span>
+                  </Link>
+                );
+              }
+
               return (
                 <a
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.id)}
-                  className={`text-base font-medium px-3.5 py-2.5 rounded-xl transition-colors flex items-center justify-between ${
-                    isActive
-                      ? 'text-[#F46200] font-semibold bg-[#FFF3EB] border border-[#F46200]/20'
-                      : 'text-[#2D2D2D] hover:text-[#F46200] hover:bg-black/[0.03]'
-                  }`}
+                  className={mobileLinkClass}
                 >
                   <span>{link.label}</span>
                   {isActive && <span className="w-2 h-2 rounded-full bg-[#F46200]"></span>}

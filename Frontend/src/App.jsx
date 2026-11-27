@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 
 import Navbar from './components/Navbar';
@@ -19,6 +19,8 @@ import Dashboard from './pages/Dashboard';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Preview from './pages/Preview';
 import Profile from './pages/Profile';
+import JobFinder from './pages/JobFinder';
+import JobDetail from './pages/JobDetail';
 
 import api from './config/api';
 import { login, setLoading } from './app/features/authSlice';
@@ -120,10 +122,14 @@ export default function App() {
         <Route path="/login" element={<AuthPage initialMode="signin" onNavigateHome={navigateToHome} />} />
         <Route path="/signup" element={<AuthPage initialMode="signup" onNavigateHome={navigateToHome} />} />
         <Route path="/about" element={<Footer />} />
+        <Route path="/jobs" element={<JobFinder publicMode={true} />} />
+        <Route path="/jobs/:jobId" element={<JobDetail publicMode={true} />} />
 
         {/* Dashboard and CV Builder Layout */}
         <Route path="app" element={<Layout />}>
           <Route index element={<Dashboard />} />
+          <Route path="jobs" element={<JobFinder publicMode={false} />} />
+          <Route path="jobs/:jobId" element={<JobDetail publicMode={false} />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
           <Route path="builder" element={<ResumeBuilder />} />
           <Route path="profile" element={<Profile />} />
