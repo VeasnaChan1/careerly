@@ -216,7 +216,7 @@ export default function JobDetailsModal({
                   </p>
                 ) : (
                   <p className="text-sm italic text-[#8A847C]">
-                    No role description provided by the employer.
+                    No role description provided by  employer.
                   </p>
                 )}
               </div>
