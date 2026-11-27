@@ -577,6 +577,7 @@ const Dashboard = () => {
             <p className="text-xs sm:text-sm text-[#5A554E] mt-2 mb-6 leading-relaxed max-w-md mx-auto">
               Start building your first professional CV from scratch or import an existing PDF to customize it with our ATS-friendly templates.
             </p>
+            
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <button
                 onClick={() => setShowCreateResume(true)}
