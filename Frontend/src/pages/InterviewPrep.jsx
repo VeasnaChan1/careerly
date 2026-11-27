@@ -106,9 +106,14 @@ export default function InterviewPrep() {
           <p className="mt-2 max-w-xl text-sm leading-6 text-[#5A554E] sm:text-base">
             Practice common interview questions and prepare questions to ask employers.
           </p>
-          <Link to="/app/interview?tab=practice" className="mt-3 inline-flex rounded-sm text-sm font-semibold text-[#AD4500] underline underline-offset-4 focus-visible:outline-brand-orange">
-            Practice your answers
-          </Link>
+          <div className="mt-3 flex flex-wrap gap-4">
+            <Link to="/app/interview?tab=practice" className="inline-flex rounded-sm text-sm font-semibold text-[#AD4500] underline underline-offset-4 focus-visible:outline-brand-orange">
+              Practice your answers
+            </Link>
+            <Link to="/app/interview-guide" className="inline-flex rounded-sm text-sm font-semibold text-[#5A554E] hover:text-[#2D2D2D] underline underline-offset-4 focus-visible:outline-brand-orange">
+              How an interview works (Guide)
+            </Link>
+          </div>
         </header>
 
         <div className="grid items-start gap-5 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-7">

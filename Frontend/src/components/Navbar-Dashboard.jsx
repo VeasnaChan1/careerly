@@ -15,6 +15,7 @@ const NavbarDashboard = () => {
     ...(user ? [{ to: '/app', label: 'My CVs', active: isMyCVsActive }] : []),
     { to: '/app/jobs', label: 'Jobs', active: location.pathname === '/app/jobs' },
     { to: '/app/interview-prep', label: 'Interview Prep', active: isInterviewPrepActive },
+    { to: '/app/interview-guide', label: 'Interview Guide', active: location.pathname === '/app/interview-guide' },
   ];
 
   const handleNavigation = (to, e) => {

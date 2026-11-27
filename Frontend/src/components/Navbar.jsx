@@ -27,6 +27,12 @@ export default function Navbar() {
         return;
       }
 
+      // If on interview guide page, set active section
+      if (window.location.pathname.startsWith('/interview-guide')) {
+        setActiveSection('interview-guide');
+        return;
+      }
+
       // If on interview page, set active section
       if (window.location.pathname.startsWith('/interview')) {
         setActiveSection('interview');
@@ -61,6 +67,7 @@ export default function Navbar() {
   const navLinks = [
     { label: 'Jobs', href: '/jobs', id: 'jobs', isRoute: true },
     { label: 'Interview Prep', href: '/interview', id: 'interview', isRoute: true },
+    { label: 'Interview Guide', href: '/interview-guide', id: 'interview-guide', isRoute: true },
     { label: 'Features', href: '/#features', id: 'features' },
     { label: 'How it works', href: '/#how-it-works', id: 'how-it-works' },
     { label: 'Pricing', href: '/#pricing', id: 'pricing' },
