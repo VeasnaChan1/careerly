@@ -30,7 +30,7 @@ const EducationForm = ({ data, onChange }) => {
       <div className=' flex items-center justify-between'>
         <div >
           <h3 className=' flex items-center gap-2 text-lg font-semibold'> Education </h3>
-          <p className=' text-sm text-gray-500'>Add your education details</p>
+          <p className=' text-sm text-gray-500'>Add your education  details</p>
         </div>
 
         <button 
