@@ -40,20 +40,20 @@ const ExperienceForm = ({ data, onChange }) => {
           className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors cursor-pointer"
         >
           <Plus className="size-3.5" />
-          Add Experiences
+          Add Experience
         </button>
       </div>
 
       {data.length === 0 ? (
         <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50/50">
           <Briefcase className="size-8 mx-auto text-gray-400 mb-2" />
-          <p className="text-sm font-medium text-gray-600">No experiences added</p>
+          <p className="text-sm font-medium text-gray-600">No experience added</p>
           <button
             type="button"
             onClick={addExperience}
             className="mt-3 text-xs font-semibold text-blue-600 hover:text-blue-700 underline cursor-pointer"
           >
-            + Add your first work experience
+            + Add your first work experiences
           </button>
         </div>
       ) : (
