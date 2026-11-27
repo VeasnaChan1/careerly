@@ -94,7 +94,7 @@ const FALLBACK_GUIDE = {
       step: 4,
       title: 'Prepare 2–3 Questions to Ask',
       description:
-        'Asking thoughtful questions at the end shows curiosity, preparation, and genuine interest in the team.'
+        'Asking thoughtful questions at the end show curiosity, preparation, and genuine interest in the team.'
     }
   ],
   starMethod: {
