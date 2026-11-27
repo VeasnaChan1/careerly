@@ -44,7 +44,7 @@ const FALLBACK_GUIDE = {
         'Ask clarifying questions if any requirement is ambiguous.'
       ]
     },
-    
+
     {
       stage: 3,
       title: 'Behavioral & Team Interview',
@@ -57,6 +57,7 @@ const FALLBACK_GUIDE = {
         'Focus on what YOU personally did and the measurable outcome.'
       ]
     },
+
     {
       stage: 4,
       title: 'Final Round & Questions to Ask',
@@ -81,7 +82,7 @@ const FALLBACK_GUIDE = {
       step: 2,
       title: 'Structure Every Story with STAR',
       description:
-        'Structure behavioral answers into Situation (15%), Task (15%), Action (50%), and Result (20%).'
+        'Structure behavioral answer into Situation (15%), Task (15%), Action (50%), and Result (20%).'
     },
     {
       step: 3,
