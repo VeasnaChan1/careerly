@@ -91,7 +91,7 @@ export default function JobDetailsModal({
           {isLoading ? (
             <div className="flex items-center gap-2 text-sm text-[#5A554E] py-2">
               <Loader2 className="w-4 h-4 animate-spin text-[#F46200]" />
-              <span>Loading job details...</span>
+              <span>Loading job detail...</span>
             </div>
           ) : job ? (
             <div className="space-y-2.5 min-w-0">
@@ -200,7 +200,7 @@ export default function JobDetailsModal({
             <div className="py-10 text-center space-y-2">
               <p className="text-base font-semibold text-[#2D2D2D]">Job not found</p>
               <p className="text-xs text-[#5A554E]">
-                This job posting may have been removed or is no longer available.
+                This job posting may have been removed or no longer available.
               </p>
             </div>
           ) : (
