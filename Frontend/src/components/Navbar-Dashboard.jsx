@@ -53,17 +53,17 @@ const NavbarDashboard = () => {
         </Link>
 
         {user && (
-          <div className="col-span-2 row-start-2 flex justify-self-center gap-3 self-stretch sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:gap-6">
+          <div className="col-span-2 row-start-2 flex items-center justify-center gap-4 pb-1 sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:gap-6 sm:pb-0">
             {navigationLinks.map(({ to, label, active }) => (
               <Link
                 key={to}
                 to={to}
                 aria-current={active ? 'page' : undefined}
                 onClick={(e) => handleNavigation(to, e)}
-                className={`relative flex min-h-11 items-center justify-center whitespace-nowrap px-3 text-sm font-semibold transition-colors focus-visible:-outline-offset-4 motion-reduce:transition-none sm:px-4 ${
+                className={`flex min-h-11 items-center whitespace-nowrap rounded-md px-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-brand-orange motion-reduce:transition-none ${
                   active
-                    ? 'text-[#AD4500] after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:rounded-full after:bg-brand-orange sm:after:inset-x-4'
-                    : 'text-ink-muted hover:text-[#AD4500]'
+                    ? 'text-charcoal underline decoration-brand-orange decoration-2 underline-offset-8'
+                    : 'text-ink-muted hover:text-charcoal'
                 }`}
               >
                 {label}
