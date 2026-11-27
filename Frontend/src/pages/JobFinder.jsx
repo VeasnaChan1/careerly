@@ -27,6 +27,7 @@ import Footer from '../components/Footer';
 import JobDetailsModal from '../components/JobDetailsModal';
 import JobSearchFilters from '../components/JobSearchFilters';
 import { fetchJobs, fetchJobById, getSavedJobIds, toggleSavedJobId } from '../services/jobApi';
+import { filterAndSortJobs } from '../utils/jobFilterUtils';
 
 // Job Type Badge Component
 function JobTypeBadge({ type }) {
@@ -72,11 +73,11 @@ export default function JobFinder({ publicMode = true }) {
   const [availableLocations, setAvailableLocations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Filters
+  // Filters (multi-select state; empty array = All)
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [selectedType, setSelectedType] = useState('all');
-  const [selectedLocation, setSelectedLocation] = useState('all');
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedLocations, setSelectedLocations] = useState([]);
   const [selectedSort, setSelectedSort] = useState('newest');
   const [onlySaved, setOnlySaved] = useState(false);
 
@@ -104,6 +105,8 @@ export default function JobFinder({ publicMode = true }) {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  const isMultiFilterActive = selectedTypes.length > 1 || selectedLocations.length > 1;
+
   // Load Jobs from API
   useEffect(() => {
     let isMounted = true;
@@ -111,17 +114,20 @@ export default function JobFinder({ publicMode = true }) {
       setIsLoading(true);
       try {
         const res = await fetchJobs({
-          page: pagination.currentPage,
-          limit: pagination.limit,
+          page: isMultiFilterActive ? 1 : pagination.currentPage,
+          limit: isMultiFilterActive ? 50 : pagination.limit,
           search: debouncedSearch,
-          job_type: selectedType,
-          location: selectedLocation,
+          job_type: selectedTypes.length === 1 ? selectedTypes[0] : 'all',
+          location: selectedLocations.length === 1 ? selectedLocations[0] : 'all',
           sort: selectedSort
         });
 
         if (isMounted && res.success) {
           setJobs(res.jobs || []);
-          setPagination(res.pagination);
+          setPagination((prev) => ({
+            ...res.pagination,
+            limit: prev.limit
+          }));
           if (res.filters?.jobTypes) setAvailableJobTypes(res.filters.jobTypes);
           if (res.filters?.locations) setAvailableLocations(res.filters.locations);
         }
@@ -137,7 +143,7 @@ export default function JobFinder({ publicMode = true }) {
     return () => {
       isMounted = false;
     };
-  }, [pagination.currentPage, pagination.limit, debouncedSearch, selectedType, selectedLocation, selectedSort]);
+  }, [pagination.currentPage, pagination.limit, debouncedSearch, selectedTypes, selectedLocations, selectedSort, isMultiFilterActive]);
 
   // Handle Page Change with smooth scroll
   const handlePageChange = (newPage) => {
@@ -227,21 +233,41 @@ export default function JobFinder({ publicMode = true }) {
     toast.success(isNow ? 'Job saved to your bookmarks' : 'Removed from bookmarks');
   };
 
+  // Toggle multi-select filter options
+  const handleToggleType = (type) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((item) => item !== type) : [...prev, type]
+    );
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+  };
+
+  const handleToggleLocation = (loc) => {
+    setSelectedLocations((prev) =>
+      prev.includes(loc) ? prev.filter((item) => item !== loc) : [...prev, loc]
+    );
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+  };
+
   // Reset All Filters
   const handleResetFilters = () => {
     setSearchQuery('');
     setDebouncedSearch('');
-    setSelectedType('all');
-    setSelectedLocation('all');
+    setSelectedTypes([]);
+    setSelectedLocations([]);
     setSelectedSort('newest');
     setOnlySaved(false);
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
   };
 
-  // Client-side saved jobs filtering if toggled
-  const displayedJobs = onlySaved
-    ? jobs.filter((j) => savedJobIds.includes(j.id))
-    : jobs;
+  // Apply frontend search & multi-filter state logic
+  const displayedJobs = filterAndSortJobs(jobs, {
+    search: debouncedSearch,
+    selectedTypes,
+    selectedLocations,
+    onlySaved,
+    savedJobIds,
+    sort: selectedSort
+  });
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF8F4] text-[#2D2D2D] selection:bg-[#F46200]/20 selection:text-[#F46200]">
@@ -300,15 +326,17 @@ export default function JobFinder({ publicMode = true }) {
             <JobSearchFilters
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
-              selectedType={selectedType}
-              onTypeChange={(val) => {
-                setSelectedType(val);
+              selectedTypes={selectedTypes}
+              onToggleType={handleToggleType}
+              onClearTypes={() => {
+                setSelectedTypes([]);
                 setPagination((prev) => ({ ...prev, currentPage: 1 }));
               }}
               availableJobTypes={availableJobTypes}
-              selectedLocation={selectedLocation}
-              onLocationChange={(val) => {
-                setSelectedLocation(val);
+              selectedLocations={selectedLocations}
+              onToggleLocation={handleToggleLocation}
+              onClearLocations={() => {
+                setSelectedLocations([]);
                 setPagination((prev) => ({ ...prev, currentPage: 1 }));
               }}
               availableLocations={availableLocations}
@@ -318,7 +346,7 @@ export default function JobFinder({ publicMode = true }) {
               onOnlySavedChange={setOnlySaved}
               savedCount={savedJobIds.length}
               displayedCount={displayedJobs.length}
-              totalCount={pagination.totalJobs}
+              totalCount={isMultiFilterActive ? displayedJobs.length : pagination.totalJobs}
               onResetFilters={handleResetFilters}
             />
           </div>
