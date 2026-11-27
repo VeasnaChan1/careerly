@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../app/features/authSlice';
 import api from '../../config/api';
-import { Eye, EyeOff, ArrowLeft, Check, MailCheck, X, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Check, X, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
 
 // Google Official 4-Color SVG Icon
 export function GoogleIcon({ className = "h-5 w-5" }) {
@@ -348,7 +348,7 @@ export function SignUpPage({
       Create your <span className="font-serif italic font-normal text-[#F46200]">free account</span>
     </span>
   ),
-  description = "Enter your email to receive a link and finish creating your account.",
+  description = "Enter your email and choose a password.",
   heroImageSrc = defaultHeroImage,
   testimonials = defaultCareerlyTestimonials,
   onSignUp,
@@ -437,6 +437,15 @@ export function SignUpPage({
                 </GlassInputWrapper>
               </div>
 
+              <div>
+                <label htmlFor="signup-password" className="block text-xs sm:text-sm font-medium text-[#5A554E] mb-1.5">Password</label>
+                <GlassInputWrapper>
+                  <input id="signup-password" name="password" type="password" autoComplete="new-password"
+                    required minLength={8} placeholder="At least 8 characters"
+                    className="w-full bg-transparent text-sm p-3.5 rounded-2xl text-[#2D2D2D] placeholder-[#8A847C] focus:outline-none" />
+                </GlassInputWrapper>
+              </div>
+
               {/* Terms checkbox */}
               <div className="animate-element animate-delay-700 flex items-start gap-2.5 text-xs text-[#5A554E]">
                 <input
@@ -468,10 +477,10 @@ export function SignUpPage({
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Requesting link...</span>
+                    <span>Creating account...</span>
                   </>
                 ) : (
-                  <span>Send verification link</span>
+                  <span>Create account</span>
                 )}
               </button>
             </form>
@@ -546,7 +555,6 @@ export function AuthPage({
   onNavigateHome,
 }) {
   const [mode, setMode] = useState(initialMode); // 'signin' | 'signup' | 'reset'
-  const [signupAddress, setSignupAddress] = useState("");
   const [resetSent, setResetSent] = useState(false);
   const [resetError, setResetError] = useState("");
   const [resetEmail, setResetEmail] = useState("");
@@ -606,12 +614,13 @@ export function AuthPage({
   };
 
   const handleSignUp = async (e) => {
-    const email = new FormData(e.currentTarget).get('email');
+    const form = new FormData(e.currentTarget);
     try {
-      await api.post('/api/users/register', { email });
-      setSignupAddress(email.trim());
+      await api.post('/api/users/register', { email: form.get('email'), password: form.get('password') });
+      setMode("signin");
+      showToast("Account created. Sign in with your email and password.");
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Could not request a verification link. Try again.');
+      throw new Error(error.response?.data?.message || 'Could not create your account. Try again.');
     }
   };
 
@@ -708,7 +717,7 @@ export function AuthPage({
                 </div>
                 <h2 className="text-2xl font-bold font-serif text-[#2D2D2D]">Check your inbox</h2>
                 <p className="text-sm text-[#5A554E] leading-relaxed">
-                  If a Careerly account exists for <strong className="text-[#2D2D2D]">{resetEmail}</strong>, look for “Reset your Careerly password” in your inbox or spam folder. If you just signed up, finish creating your account from the verification email first.
+                  If a Careerly account exists for <strong className="text-[#2D2D2D]">{resetEmail}</strong>, look for “Reset your Careerly password” in your inbox or spam folder.
                 </p>
                 <button
                   type="button"
@@ -763,29 +772,6 @@ export function AuthPage({
             )}
           </div>
         </div>
-      ) : mode === "signup" && signupAddress ? (
-        <main className="grid min-h-dvh place-items-center bg-[#FAF8F4] px-4 py-10">
-          <section aria-labelledby="inbox-title" className="w-full max-w-lg overflow-hidden rounded-3xl border border-[#DED8CF] bg-white shadow-[0_18px_60px_-30px_rgba(58,37,18,.32)]">
-            <header className="relative overflow-hidden bg-[#292620] px-7 py-8 text-white sm:px-10">
-              <span className="text-sm font-bold tracking-tight">Careerly<span className="text-[#FF924A]">.</span></span>
-              <h1 id="inbox-title" className="relative z-10 mt-8 max-w-[72%] text-4xl font-semibold leading-none tracking-tight sm:text-5xl">
-                Check your <em className="block font-serif font-normal text-[#FFAA72]">inbox.</em>
-              </h1>
-              <MailCheck aria-hidden="true" strokeWidth={1.15} className="absolute right-6 bottom-7 size-16 -rotate-12 text-[#FFAA72] sm:right-10 sm:size-24" />
-            </header>
-            <div className="px-7 py-7 sm:px-10 sm:py-8">
-              <p role="status" className="text-sm leading-6 text-[#625A50]">
-                We sent a verification link to
-                <strong className="block break-all text-lg font-semibold text-[#292620]">{signupAddress}</strong>
-              </p>
-              <p className="mt-4 text-sm leading-6 text-[#625A50]">Open the link to finish creating your account. If you can’t find the email, check your spam folder.</p>
-              <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[#E7E2D8] pt-5 text-sm font-semibold">
-                <button type="button" className="cursor-pointer rounded-full bg-[#292620] px-5 py-3 text-white hover:bg-[#453E34] focus-visible:outline-2 focus-visible:outline-offset-2" onClick={() => setSignupAddress("")}>Try again or change email</button>
-                <button type="button" className="cursor-pointer rounded py-3 text-[#74401E] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2" onClick={() => { setSignupAddress(""); setMode("signin"); }}>Back to sign in</button>
-              </div>
-            </div>
-          </section>
-        </main>
       ) : mode === "signup" ? (
         <SignUpPage
           onSignIn={() => setMode("signin")}
