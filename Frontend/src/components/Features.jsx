@@ -22,7 +22,7 @@ export default function Features() {
             Three connected tools designed for job seekers in Cambodia.
           </h2>
           <p className="mt-4 text-base sm:text-lg text-[#5A554E] leading-relaxed">
-            Most international platforms charge monthly subscription traps or fail on mobile. Careerly handles the whole journey—from your first resume draft to answering interview questions.
+            Most international platforms charge monthly subscription traps or fail on mobile. Careerly handles the whole journey—from your first resume to answering interview questions.
           </p>
         </div>
 
