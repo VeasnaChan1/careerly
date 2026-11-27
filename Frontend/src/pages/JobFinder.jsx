@@ -25,6 +25,7 @@ import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import JobDetailsModal from '../components/JobDetailsModal';
+import JobSearchFilters from '../components/JobSearchFilters';
 import { fetchJobs, fetchJobById, getSavedJobIds, toggleSavedJobId } from '../services/jobApi';
 
 // Job Type Badge Component
@@ -279,46 +280,13 @@ export default function JobFinder({ publicMode = true }) {
             </div>
 
             {/* Quick Actions Bar */}
-            <div className="pt-6 flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#8A847C]">
-                  Quick Filter:
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedType('all');
-                    setPagination((prev) => ({ ...prev, currentPage: 1 }));
-                  }}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                    selectedType === 'all'
-                      ? 'bg-[#F46200] text-white shadow-xs'
-                      : 'bg-[#FAF8F4] text-[#5A554E] hover:text-[#2D2D2D] border border-[#E7E2D8]'
-                  }`}
-                >
-                  All Types
-                </button>
-                {availableJobTypes.map((t) => (
-                  <button
-                    key={t.type}
-                    type="button"
-                    onClick={() => {
-                      setSelectedType(t.type);
-                      setPagination((prev) => ({ ...prev, currentPage: 1 }));
-                    }}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                      selectedType === t.type
-                        ? 'bg-[#F46200] text-white shadow-xs'
-                        : 'bg-[#FAF8F4] text-[#5A554E] hover:text-[#2D2D2D] border border-[#E7E2D8]'
-                    }`}
-                  >
-                    {t.type} ({t.count})
-                  </button>
-                ))}
-              </div>
+            <div className="pt-5 flex flex-wrap items-center justify-between gap-4">
+              <p className="text-xs text-[#5A554E]">
+                Filter by role type, location, or keyword below to find your next opportunity.
+              </p>
 
               <Link
-                to="/app/builder/guest"
+                to={publicMode ? '/app/builder/guest' : '/app/builder'}
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-[#F46200] hover:text-[#DC5800] transition-colors"
               >
                 <span>Prepare your CV first</span>
@@ -327,98 +295,32 @@ export default function JobFinder({ publicMode = true }) {
             </div>
           </div>
 
-          {/* Search & Filter Bar */}
-          <div ref={listTopRef} className="bg-white p-5 rounded-2xl border border-[#E7E2D8] shadow-xs mb-8 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-              {/* Search Keyword Input (6 cols) */}
-              <div className="md:col-span-6 relative">
-                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8A847C]" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by job title, company name, or skills (e.g. React, ABA Bank, QA)..."
-                  className="w-full pl-10 pr-10 py-2.5 text-sm bg-[#FAF8F4] border border-[#E7E2D8] rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#F46200]/30 focus:border-[#F46200] text-[#2D2D2D] placeholder-[#8A847C]"
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8A847C] hover:text-[#2D2D2D]"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-
-              {/* Location Select (3 cols) */}
-              <div className="md:col-span-3">
-                <div className="relative">
-                  <MapPin className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8A847C]" />
-                  <select
-                    value={selectedLocation}
-                    onChange={(e) => {
-                      setSelectedLocation(e.target.value);
-                      setPagination((prev) => ({ ...prev, currentPage: 1 }));
-                    }}
-                    className="w-full pl-9 pr-8 py-2.5 text-xs font-semibold bg-[#FAF8F4] border border-[#E7E2D8] rounded-xl text-[#2D2D2D] focus:outline-none focus:border-[#F46200] cursor-pointer appearance-none"
-                  >
-                    <option value="all">All Locations in Cambodia</option>
-                    {availableLocations.map((loc) => (
-                      <option key={loc} value={loc}>
-                        {loc}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Sort By Select (3 cols) */}
-              <div className="md:col-span-3">
-                <select
-                  value={selectedSort}
-                  onChange={(e) => setSelectedSort(e.target.value)}
-                  className="w-full px-3 py-2.5 text-xs font-semibold bg-[#FAF8F4] border border-[#E7E2D8] rounded-xl text-[#2D2D2D] focus:outline-none focus:border-[#F46200] cursor-pointer"
-                >
-                  <option value="newest">Sort: Newest First</option>
-                  <option value="company">Sort: Company Name (A-Z)</option>
-                  <option value="title">Sort: Job Title (A-Z)</option>
-                  <option value="oldest">Sort: Oldest First</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Bottom Filter Toggles */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#E7E2D8]/60 text-xs text-[#5A554E]">
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 cursor-pointer hover:text-[#2D2D2D]">
-                  <input
-                    type="checkbox"
-                    checked={onlySaved}
-                    onChange={(e) => setOnlySaved(e.target.checked)}
-                    className="custom-checkbox"
-                  />
-                  <span>Show Saved Jobs Only ({savedJobIds.length})</span>
-                </label>
-              </div>
-
-              <div className="flex items-center gap-3">
-                {(debouncedSearch || selectedType !== 'all' || selectedLocation !== 'all' || onlySaved) && (
-                  <button
-                    type="button"
-                    onClick={handleResetFilters}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#F46200] hover:text-[#DC5800] cursor-pointer"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Reset Filters</span>
-                  </button>
-                )}
-                <span className="text-xs text-[#8A847C]">
-                  Showing <strong className="text-[#2D2D2D]">{displayedJobs.length}</strong> of{' '}
-                  <strong className="text-[#2D2D2D]">{pagination.totalJobs}</strong> jobs
-                </span>
-              </div>
-            </div>
+          {/* Search & Filter Controls */}
+          <div ref={listTopRef}>
+            <JobSearchFilters
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedType={selectedType}
+              onTypeChange={(val) => {
+                setSelectedType(val);
+                setPagination((prev) => ({ ...prev, currentPage: 1 }));
+              }}
+              availableJobTypes={availableJobTypes}
+              selectedLocation={selectedLocation}
+              onLocationChange={(val) => {
+                setSelectedLocation(val);
+                setPagination((prev) => ({ ...prev, currentPage: 1 }));
+              }}
+              availableLocations={availableLocations}
+              selectedSort={selectedSort}
+              onSortChange={setSelectedSort}
+              onlySaved={onlySaved}
+              onOnlySavedChange={setOnlySaved}
+              savedCount={savedJobIds.length}
+              displayedCount={displayedJobs.length}
+              totalCount={pagination.totalJobs}
+              onResetFilters={handleResetFilters}
+            />
           </div>
 
           {/* JOB CARDS LIST */}
