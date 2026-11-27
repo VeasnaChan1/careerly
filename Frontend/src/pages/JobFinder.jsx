@@ -105,29 +105,24 @@ export default function JobFinder({ publicMode = true }) {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const isMultiFilterActive = selectedTypes.length > 1 || selectedLocations.length > 1;
-
-  // Load Jobs from API
+  // Load Jobs from API with search & multi-filter query params
   useEffect(() => {
     let isMounted = true;
     async function loadJobsData() {
       setIsLoading(true);
       try {
         const res = await fetchJobs({
-          page: isMultiFilterActive ? 1 : pagination.currentPage,
-          limit: isMultiFilterActive ? 50 : pagination.limit,
+          page: pagination.currentPage,
+          limit: pagination.limit,
           search: debouncedSearch,
-          job_type: selectedTypes.length === 1 ? selectedTypes[0] : 'all',
-          location: selectedLocations.length === 1 ? selectedLocations[0] : 'all',
+          job_type: selectedTypes.length > 0 ? selectedTypes.join(',') : 'all',
+          location: selectedLocations.length > 0 ? selectedLocations.join(',') : 'all',
           sort: selectedSort
         });
 
         if (isMounted && res.success) {
           setJobs(res.jobs || []);
-          setPagination((prev) => ({
-            ...res.pagination,
-            limit: prev.limit
-          }));
+          setPagination(res.pagination);
           if (res.filters?.jobTypes) setAvailableJobTypes(res.filters.jobTypes);
           if (res.filters?.locations) setAvailableLocations(res.filters.locations);
         }
@@ -143,7 +138,7 @@ export default function JobFinder({ publicMode = true }) {
     return () => {
       isMounted = false;
     };
-  }, [pagination.currentPage, pagination.limit, debouncedSearch, selectedTypes, selectedLocations, selectedSort, isMultiFilterActive]);
+  }, [pagination.currentPage, pagination.limit, debouncedSearch, selectedTypes, selectedLocations, selectedSort]);
 
   // Handle Page Change with smooth scroll
   const handlePageChange = (newPage) => {
@@ -346,7 +341,7 @@ export default function JobFinder({ publicMode = true }) {
               onOnlySavedChange={setOnlySaved}
               savedCount={savedJobIds.length}
               displayedCount={displayedJobs.length}
-              totalCount={isMultiFilterActive ? displayedJobs.length : pagination.totalJobs}
+              totalCount={pagination.totalJobs}
               onResetFilters={handleResetFilters}
             />
           </div>
