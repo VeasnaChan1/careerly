@@ -260,7 +260,7 @@ export default function JobDetailsModal({
               </a>
             ) : (
               <span className="text-xs font-medium text-[#8A847C]">
-                Contact company directly to apply
+                Contact company to apply
               </span>
             )}
           </div>
