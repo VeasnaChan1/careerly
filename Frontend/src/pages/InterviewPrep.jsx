@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 import { interviewCategories, interviewQuestions } from '../data/interviewQuestions.js';
 
 const focusStyle = 'focus-visible:outline-2 focus-visible:outline-[#F46200]';
@@ -55,7 +56,6 @@ function CategoryQuestions({ category }) {
           {questions.map((question) => {
             const isOpen = openQuestion === question.id;
             const panelId = `${question.id}-details`;
-            const detailLabel = question.sampleAnswer ? 'answer' : 'guidance';
 
             return (
               <li key={question.id}>
@@ -65,17 +65,18 @@ function CategoryQuestions({ category }) {
                     aria-expanded={isOpen}
                     aria-controls={panelId}
                     onClick={() => setOpenQuestion(isOpen ? null : question.id)}
-                    className={`flex w-full cursor-pointer flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4 text-left hover:bg-[#FAF8F4] focus-visible:outline-offset-[-2px] sm:px-6 ${focusStyle} ${isOpen ? 'bg-[#FAF8F4]' : ''}`}
+                    className={`flex w-full cursor-pointer items-center justify-between gap-4 px-4 py-4 text-left hover:bg-[#FAF8F4] focus-visible:outline-offset-[-2px] sm:px-6 ${focusStyle} ${isOpen ? 'bg-[#FAF8F4]' : ''}`}
                   >
-                    <span className="min-w-0 flex-1 basis-44 text-sm font-semibold leading-6 sm:text-base">
+                    <span className="min-w-0 flex-1 text-sm font-semibold leading-6 sm:text-base">
                       {question.question}
                       {category.id === 'technical' && (
                         <span className="block text-xs font-medium leading-5 text-[#655A50]">{question.tags.join(', ')}</span>
                       )}
                     </span>
-                    <span aria-hidden="true" className="shrink-0 rounded-md bg-[#FFF0E5] px-2.5 py-1 text-xs font-semibold text-[#AD4500]">
-                      {isOpen ? 'Hide' : 'View'} {detailLabel}
-                    </span>
+                    <ChevronDown
+                      aria-hidden="true"
+                      className={`size-5 shrink-0 text-[#AD4500] motion-safe:transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    />
                   </button>
                 </h3>
                 <div id={panelId} hidden={!isOpen} className="border-t border-[#E7E2D8] px-4 py-5 sm:px-6">
@@ -105,8 +106,8 @@ export default function InterviewPrep() {
           <p className="mt-2 max-w-xl text-sm leading-6 text-[#5A554E] sm:text-base">
             Practice common interview questions and prepare questions to ask employers.
           </p>
-          <Link to="/app/interview" className="mt-3 inline-flex rounded-sm text-sm font-semibold text-[#AD4500] underline underline-offset-4 focus-visible:outline-brand-orange">
-            Open practice tools and STAR guide
+          <Link to="/app/interview?tab=practice" className="mt-3 inline-flex rounded-sm text-sm font-semibold text-[#AD4500] underline underline-offset-4 focus-visible:outline-brand-orange">
+            Practice your answers
           </Link>
         </header>
 

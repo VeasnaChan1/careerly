@@ -283,7 +283,7 @@ export default function InterviewPractice({ publicMode = true }) {
           if (prev <= 1) {
             clearInterval(timerRef.current);
             setIsTimerRunning(false);
-            toast('Practice timer finished! Review your answer.', { icon: 'ΓÅ░' });
+            toast('Practice timer finished! Review your answer.');
             return 0;
           }
           return prev - 1;
@@ -523,16 +523,17 @@ export default function InterviewPractice({ publicMode = true }) {
             <div className="space-y-6">
               {/* Filter Controls Bar */}
               <div className="bg-white p-5 rounded-2xl border border-[#E7E2D8] shadow-xs space-y-4">
-                <div className="flex flex-col md:flex-row md:items-center gap-3">
+                <div className="grid gap-3 sm:grid-cols-2 sm:items-center lg:grid-cols-[minmax(0,1fr)_minmax(0,21rem)_auto]">
                   {/* Search Input */}
-                  <div className="relative flex-grow">
+                  <div className="relative min-w-0">
                     <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8A847C]" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search questions by keyword, topic, or job role (e.g. junior developer, conflict, salary)..."
-                      className="w-full pl-10 pr-4 py-2 text-sm bg-[#FAF8F4] border border-[#E7E2D8] rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#F46200]/30 focus:border-[#F46200] text-[#2D2D2D] placeholder-[#8A847C]"
+                      aria-label="Search interview questions"
+                      placeholder="Search by keyword, topic, or role"
+                      className="min-h-11 w-full pl-10 pr-12 py-2 text-sm bg-[#FAF8F4] border border-[#E7E2D8] rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#F46200]/30 focus:border-[#F46200] text-[#2D2D2D] placeholder-[#8A847C]"
                     />
                     {searchQuery && (
                       <button
@@ -545,13 +546,36 @@ export default function InterviewPractice({ publicMode = true }) {
                     )}
                   </div>
 
+                  <div className="flex min-w-0 items-center gap-2">
+                    <label htmlFor="interview-category" className="text-sm font-semibold text-[#5A554E]">
+                      Category
+                    </label>
+                    <div className="relative min-w-0 flex-1">
+                      <select
+                        id="interview-category"
+                        value={selectedCategory}
+                        onChange={(event) => setSelectedCategory(event.target.value)}
+                        className="min-h-11 w-full cursor-pointer appearance-none truncate rounded-xl border border-[#E7E2D8] bg-[#FAF8F4] py-2 pl-3 pr-9 text-sm font-medium text-[#2D2D2D] hover:border-[#C9C0B1] focus-visible:outline-2 focus-visible:outline-[#AD4500]"
+                      >
+                        <option value="all">All categories ({totalQuestions})</option>
+                        {categories.map((category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.name} ({category.count})
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-[#5A554E]" />
+                    </div>
+                  </div>
+
                   {/* Difficulty Selector */}
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-[#5A554E] shrink-0">Level:</span>
+                    <label htmlFor="interview-level" className="text-sm font-semibold text-[#5A554E]">Level</label>
                     <select
+                      id="interview-level"
                       value={selectedDifficulty}
                       onChange={(e) => setSelectedDifficulty(e.target.value)}
-                      className="text-xs font-medium py-2 px-3 bg-[#FAF8F4] border border-[#E7E2D8] rounded-xl text-[#2D2D2D] focus:outline-none focus:border-[#F46200] cursor-pointer"
+                      className="min-h-11 text-sm font-medium py-2 px-3 bg-[#FAF8F4] border border-[#E7E2D8] rounded-xl text-[#2D2D2D] focus:outline-none focus:border-[#F46200] cursor-pointer"
                     >
                       <option value="all">All Difficulties</option>
                       <option value="Easy">Beginner / Intern</option>
@@ -559,39 +583,6 @@ export default function InterviewPractice({ publicMode = true }) {
                       <option value="Hard">Advanced</option>
                     </select>
                   </div>
-                </div>
-
-                {/* Categories Pills */}
-                <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-[#E7E2D8]/60">
-                  <span className="text-xs font-bold text-[#8A847C] uppercase tracking-wider mr-1">
-                    Categories:
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedCategory('all')}
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                      selectedCategory === 'all'
-                        ? 'bg-[#2D2D2D] text-white shadow-xs'
-                        : 'bg-[#FAF8F4] text-[#5A554E] hover:text-[#2D2D2D] border border-[#E7E2D8]'
-                    }`}
-                  >
-                    All ({questions.length})
-                  </button>
-
-                  {categories.map((cat) => (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => setSelectedCategory(cat.id)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                        selectedCategory === cat.id
-                          ? 'bg-[#F46200] text-white shadow-xs'
-                          : 'bg-[#FAF8F4] text-[#5A554E] hover:text-[#2D2D2D] border border-[#E7E2D8]'
-                      }`}
-                    >
-                      {cat.name} ({cat.count})
-                    </button>
-                  ))}
                 </div>
 
                 {/* Quick Toggle Filters */}
@@ -932,7 +923,7 @@ export default function InterviewPractice({ publicMode = true }) {
                         rows={7}
                         value={practiceAnswer}
                         onChange={(e) => setPracticeAnswer(e.target.value)}
-                        placeholder="Draft your bullet points or full response here using the STAR format:&#10;ΓÇó Situation: Where did this happen? (e.g. In my Year 3 web project at CADT)&#10;ΓÇó Task: What challenge or goal was assigned to you?&#10;ΓÇó Action: What specific technologies or steps did YOU take?&#10;ΓÇó Result: What was the measurable outcome or grade?"
+                        placeholder="Draft your bullet points or full response here using the STAR format:&#10;Situation: Where did this happen? (e.g. In my Year 3 web project at CADT)&#10;Task: What challenge or goal was assigned to you?&#10;Action: What specific technologies or steps did YOU take?&#10;Result: What was the measurable outcome or grade?"
                         className="w-full p-4 text-sm bg-[#FAF8F4] border border-[#E7E2D8] rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#F46200]/30 focus:border-[#F46200] text-[#2D2D2D] placeholder-[#8A847C]/70 leading-relaxed font-sans"
                       />
 
@@ -1058,7 +1049,7 @@ export default function InterviewPractice({ publicMode = true }) {
                         >
                           <div className="flex items-center justify-between gap-1 mb-1">
                             <span className="text-[10px] font-bold uppercase tracking-wider text-[#8A847C]">
-                              #{idx + 1} ┬╖ {q.category}
+                              #{idx + 1} | {q.category}
                             </span>
                             {isPracticed && (
                               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
@@ -1081,16 +1072,13 @@ export default function InterviewPractice({ publicMode = true }) {
                   </h4>
                   <ul className="text-xs text-[#5A554E] space-y-2 leading-relaxed">
                     <li className="flex items-start gap-1.5">
-                      <span className="text-[#F46200] font-bold">ΓÇó</span>
-                      <span><strong>Speak Out Loud:</strong> Do not just think in your head; record yourself or speak aloud to build English muscle memory.</span>
+                                            <span><strong>Speak Out Loud:</strong> Do not just think in your head; record yourself or speak aloud to build English muscle memory.</span>
                     </li>
                     <li className="flex items-start gap-1.5">
-                      <span className="text-[#F46200] font-bold">ΓÇó</span>
-                      <span><strong>Stick to 2 Minutes:</strong> Most behavioral questions should be answered in 90 to 120 seconds.</span>
+                                            <span><strong>Stick to 2 Minutes:</strong> Most behavioral questions should be answered in 90 to 120 seconds.</span>
                     </li>
                     <li className="flex items-start gap-1.5">
-                      <span className="text-[#F46200] font-bold">ΓÇó</span>
-                      <span><strong>Focus on Action:</strong> 60% of your time should be what YOU did, using action verbs (built, designed, debugged, presented).</span>
+                                            <span><strong>Focus on Action:</strong> 60% of your time should be what YOU did, using action verbs (built, designed, debugged, presented).</span>
                     </li>
                   </ul>
                 </div>
@@ -1214,7 +1202,7 @@ export default function InterviewPractice({ publicMode = true }) {
                       English Interview Confidence & Pacing Tips
                     </h3>
                     <p className="text-xs sm:text-sm text-[#5A554E] mt-1">
-                      Hiring managers in Cambodia care most about clarity, logic, and attitudeΓÇönot a native accent.
+                      Hiring managers in Cambodia care most about clear communication, logical answers, and a positive attitude.
                     </p>
                   </div>
 
