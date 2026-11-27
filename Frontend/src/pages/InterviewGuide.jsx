@@ -44,6 +44,7 @@ const FALLBACK_GUIDE = {
         'Ask clarifying questions if any requirement is ambiguous.'
       ]
     },
+    
     {
       stage: 3,
       title: 'Behavioral & Team Interview',
