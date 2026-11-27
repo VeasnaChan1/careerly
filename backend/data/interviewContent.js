@@ -45,6 +45,52 @@ export const interviewCategories = [
 export const interviewGuide = {
   title: "Careerly Master Interview Guide",
   subtitle: "Everything you need to turn interview anxiety into confident, compelling English answers.",
+  stages: [
+    {
+      stage: 1,
+      title: "Application & HR Screening Call",
+      duration: "15–20 minutes",
+      whatToExpect: "A recruiter or HR coordinator reviews your CV and calls or chats to verify your basic qualifications, availability, expected salary, and English communication.",
+      howToPrepare: [
+        "Keep a 60-second 'Tell me about yourself' pitch ready.",
+        "Know the key points on your CV so you can explain them clearly.",
+        "Research the company's main product or service before the call."
+      ]
+    },
+    {
+      stage: 2,
+      title: "Skills or Technical Assessment",
+      duration: "30–90 minutes",
+      whatToExpect: "Depending on the role, you may complete a practical task, coding exercise, portfolio walkthrough, or role-specific problem-solving session.",
+      howToPrepare: [
+        "Review fundamentals listed in the job description.",
+        "Explain your thought process step by step instead of staying silent.",
+        "Ask clarifying questions if any requirement is ambiguous."
+      ]
+    },
+    {
+      stage: 3,
+      title: "Behavioral & Team Interview",
+      duration: "30–45 minutes",
+      whatToExpect: "Hiring managers or future teammates ask how you handle challenges, teamwork, deadlines, and mistakes to see how you work with others.",
+      howToPrepare: [
+        "Prepare 3–4 real stories from university projects, internships, or jobs.",
+        "Use the STAR method (Situation, Task, Action, Result) to stay structured.",
+        "Focus on what YOU personally did and the measurable outcome."
+      ]
+    },
+    {
+      stage: 4,
+      title: "Final Round & Questions to Ask",
+      duration: "20–45 minutes",
+      whatToExpect: "A final conversation with a team lead, manager, or founder about long-term fit, growth goals, and your questions about the role.",
+      howToPrepare: [
+        "Prepare 2–3 thoughtful questions about team workflow, onboarding, or success metrics.",
+        "Confirm next steps and timeline politely before ending the interview.",
+        "Send a short thank-you message within 24 hours."
+      ]
+    }
+  ],
   instructions: [
     {
       step: 1,

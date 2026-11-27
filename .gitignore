@@ -25,3 +25,6 @@ dist-ssr
 
 
 .env
+
+# Local sprint planning
+/INTERVIEW_PREPARATION_SPRINT_PLAN.md

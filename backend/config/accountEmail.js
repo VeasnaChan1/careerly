@@ -1,13 +1,26 @@
-export function mailConfigured() {
+function emailProvider() {
   const env = process.env;
-  return env.GMAIL_USER || env.GMAIL_APP_PASSWORD
-    ? Boolean(env.GMAIL_USER && env.GMAIL_APP_PASSWORD)
-    : Boolean(env.RESEND_API_KEY && env.PASSWORD_RESET_FROM);
+  if (env.RESEND_API_KEY && env.PASSWORD_RESET_FROM) return "resend";
+  if (env.GMAIL_USER && env.GMAIL_APP_PASSWORD) return "gmail";
+  return null;
+}
+
+export function mailConfigured() {
+  return Boolean(emailProvider());
+}
+
+export function accountFrontendUrl() {
+  const value = process.env.FRONTEND_URL;
+  if (!URL.canParse(value)) return null;
+  const url = new URL(value);
+  const local = ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+  if (local && process.env.RENDER === "true") return null;
+  return url.protocol === "https:" || (local && url.protocol === "http:") ? url : null;
 }
 
 export async function sendAccountEmail({ to, subject, text }) {
   const env = process.env;
-  if (env.GMAIL_USER || env.GMAIL_APP_PASSWORD) {
+  if (emailProvider() === "gmail") {
     const { default: nodemailer } = await import("nodemailer");
     const mail = nodemailer.createTransport({
       service: "gmail",

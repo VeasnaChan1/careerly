@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { Navigate, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 
 import Navbar from './components/Navbar';
@@ -16,11 +16,13 @@ import LenisScroll from './components/lenis-scroll';
 
 import Layout from './pages/Layout';
 import Dashboard from './pages/Dashboard';
+import InterviewPractice from './pages/InterviewPractice';
+import InterviewPrep from './pages/InterviewPrep';
+import InterviewGuide from './pages/InterviewGuide';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Preview from './pages/Preview';
 import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
-import InterviewPrep from './pages/InterviewPrep';
 import JobFinder from './pages/JobFinder';
 
 import api from './config/api';
@@ -85,33 +87,26 @@ export default function App() {
   const location = useLocation();
   const [currentHash, setCurrentHash] = useState(() => window.location.hash);
 
-  const getUserData = async () => {
-    const token = localStorage.getItem('token');
-    try {
-      if (token) {
-        const { data } = await api.get('/api/users/data', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        dispatch(
-          login({
-            token,
-            user: data
-          })
-        );
-      }
-    } catch (error) {
-      console.error('Failed to fetch user data:', error.message);
-      localStorage.removeItem('token');
-    } finally {
-      dispatch(setLoading(false));
-    }
-  };
-
   useEffect(() => {
+    const getUserData = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        if (token) {
+          const { data } = await api.get('/api/users/data', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          dispatch(login({ token, user: data }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error.message);
+        localStorage.removeItem('token');
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+
     getUserData();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -131,6 +126,10 @@ export default function App() {
       document.title = 'Careerly — Build your CV. Find your job. Ace your interview.';
     } else if (location.pathname.startsWith('/jobs') || location.pathname.startsWith('/app/jobs')) {
       document.title = 'Jobs in Cambodia — Careerly';
+    } else if (location.pathname === '/interview-guide' || location.pathname === '/app/interview-guide') {
+      document.title = 'Interview Guide — Careerly';
+    } else if (location.pathname === '/app/interview-prep') {
+      document.title = 'Interview Prep - Careerly';
     } else if (location.pathname.startsWith('/interview') || location.pathname.startsWith('/app/interview')) {
       document.title = 'Interview Preparation & Practice — Careerly';
     } else if (location.pathname.startsWith('/app/profile')) {
@@ -144,6 +143,14 @@ export default function App() {
     window.location.hash = '';
     navigate('/');
   };
+
+  // Open account email links in React after the static host serves the entry page.
+  if (location.pathname === '/' || location.pathname === '/index.html') {
+    const flow = new URLSearchParams(location.hash.slice(1)).get('flow');
+    if (flow === 'reset-password' || flow === 'verify-email') {
+      return <Navigate replace to={{ pathname: '/' + flow, hash: location.hash }} />;
+    }
+  }
 
   // If hash points to login / signin / signup / register on the root route
   if (location.pathname === '/' && (currentHash === '#login' || currentHash === '#signin')) {
@@ -176,14 +183,17 @@ export default function App() {
         <Route path="/verify-email" element={<ResetPassword key={location.hash} verifyEmail />} />
         <Route path="/about" element={<Footer />} />
         <Route path="/jobs" element={<JobFinder publicMode={true} />} />
-        <Route path="/interview" element={<InterviewPrep publicMode={true} />} />
+        <Route path="/interview" element={<InterviewPractice publicMode />} />
+        <Route path="/interview-guide" element={<InterviewGuide publicMode />} />
 
         {/* Dashboard and CV Builder Layout */}
         <Route path="app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="my-cvs" element={<Dashboard />} />
+          <Route path="interview-prep" element={<InterviewPrep />} />
+          <Route path="interview-guide" element={<InterviewGuide publicMode={false} />} />
           <Route path="jobs" element={<JobFinder publicMode={false} />} />
-          <Route path="interview" element={<InterviewPrep publicMode={false} />} />
+          <Route path="interview" element={<InterviewPractice publicMode={false} />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
           <Route path="builder" element={<ResumeBuilder />} />
           <Route path="profile" element={<Profile />} />

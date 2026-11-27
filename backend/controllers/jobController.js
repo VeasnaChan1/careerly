@@ -19,9 +19,21 @@ export const getJobs = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
+    const parseMultiFilter = (val) =>
+      typeof val === "string"
+        ? val
+            .split(",")
+            .map((v) => v.trim())
+            .filter((v) => v && v.toLowerCase() !== "all")
+        : [];
+
+    const selectedTypes = parseMultiFilter(job_type);
+    const selectedLocations = parseMultiFilter(location);
+
     let dbJobs = [];
     let totalJobs = 0;
     let allJobsForFilters = [];
+    let dbFailed = false;
 
     try {
       const whereClause = {
@@ -30,29 +42,39 @@ export const getJobs = async (req, res) => {
         }
       };
 
-      if (job_type && job_type.toLowerCase() !== "all") {
-        whereClause.job_type = {
-          equals: job_type,
-          mode: "insensitive"
-        };
+      const andConditions = [];
+
+      if (selectedTypes.length > 0) {
+        andConditions.push({
+          OR: selectedTypes.map((t) => ({
+            job_type: { equals: t, mode: "insensitive" }
+          }))
+        });
       }
 
-      if (location && location.toLowerCase() !== "all") {
-        whereClause.location = {
-          contains: location,
-          mode: "insensitive"
-        };
+      if (selectedLocations.length > 0) {
+        andConditions.push({
+          OR: selectedLocations.map((loc) => ({
+            location: { contains: loc, mode: "insensitive" }
+          }))
+        });
       }
 
       if (search && search.trim()) {
         const queryTerm = search.trim();
-        whereClause.OR = [
-          { title: { contains: queryTerm, mode: "insensitive" } },
-          { company: { contains: queryTerm, mode: "insensitive" } },
-          { location: { contains: queryTerm, mode: "insensitive" } },
-          { description: { contains: queryTerm, mode: "insensitive" } },
-          { requirements: { contains: queryTerm, mode: "insensitive" } }
-        ];
+        andConditions.push({
+          OR: [
+            { title: { contains: queryTerm, mode: "insensitive" } },
+            { company: { contains: queryTerm, mode: "insensitive" } },
+            { location: { contains: queryTerm, mode: "insensitive" } },
+            { description: { contains: queryTerm, mode: "insensitive" } },
+            { requirements: { contains: queryTerm, mode: "insensitive" } }
+          ]
+        });
+      }
+
+      if (andConditions.length > 0) {
+        whereClause.AND = andConditions;
       }
 
       // Determine order
@@ -83,22 +105,29 @@ export const getJobs = async (req, res) => {
         })
       ]);
     } catch (dbErr) {
+      dbFailed = true;
       console.warn("DB query failed, fallback to in-memory sample jobs:", dbErr.message);
     }
 
-    // Static fallback if DB is empty or unreachable
-    if (!dbJobs || (dbJobs.length === 0 && totalJobs === 0)) {
+    // Static fallback only if DB is unreachable or the jobs table has no seeded rows
+    if (dbFailed || allJobsForFilters.length === 0) {
       let filtered = [...sampleJobs];
 
-      if (job_type && job_type.toLowerCase() !== "all") {
+      if (selectedTypes.length > 0) {
         filtered = filtered.filter(
-          (j) => j.job_type && j.job_type.toLowerCase() === job_type.toLowerCase()
+          (j) =>
+            j.job_type &&
+            selectedTypes.some((t) => j.job_type.toLowerCase() === t.toLowerCase())
         );
       }
 
-      if (location && location.toLowerCase() !== "all") {
+      if (selectedLocations.length > 0) {
         filtered = filtered.filter(
-          (j) => j.location && j.location.toLowerCase().includes(location.toLowerCase())
+          (j) =>
+            j.location &&
+            selectedLocations.some((loc) =>
+              j.location.toLowerCase().includes(loc.toLowerCase())
+            )
         );
       }
 

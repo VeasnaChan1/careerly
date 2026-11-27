@@ -405,7 +405,7 @@ const Dashboard = () => {
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#F46200] hover:bg-[#DC5800] text-white font-semibold text-xs sm:text-sm rounded-xl shadow-xs hover:shadow transition-all cursor-pointer active:scale-95"
               >
                 <Plus className="size-4" />
-                <span>+ Create Blank CV</span>
+                <span>Create Blank CV</span>
               </button>
             </div>
           </div>
@@ -577,12 +577,13 @@ const Dashboard = () => {
             <p className="text-xs sm:text-sm text-[#5A554E] mt-2 mb-6 leading-relaxed max-w-md mx-auto">
               Start building your first professional CV from scratch or import an existing PDF to customize it with our ATS-friendly templates.
             </p>
+            
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <button
                 onClick={() => setShowCreateResume(true)}
                 className="px-5 py-2.5 bg-[#F46200] hover:bg-[#DC5800] text-white font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition-all cursor-pointer"
               >
-                + Create Blank CV
+                Create Blank CV
               </button>
               <button
                 onClick={() => setShowUploadResume(true)}

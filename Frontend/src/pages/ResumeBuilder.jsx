@@ -37,6 +37,12 @@ import toast from 'react-hot-toast';
 const GUEST_STORAGE_KEY = 'careerly_guest_resume';
 const GUEST_SECTION_KEY = 'careerly_guest_section';
 
+function serializeResume(data) {
+  return JSON.stringify(data, (_, value) =>
+    typeof value === 'string' ? value.replaceAll('\u0000', '') : value
+  );
+}
+
 const defaultStarterResume = {
   _id: 'guest',
   title: 'My Professional CV',
@@ -154,6 +160,7 @@ const ResumeBuilder = () => {
   });
 
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved', 'saving'
+  const [isSaving, setIsSaving] = useState(false);
   const [removeBackground, setRemoveBackground] = useState(false);
   const [showVisibilityModal, setShowVisibilityModal] = useState(false);
   const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
@@ -190,7 +197,7 @@ const ResumeBuilder = () => {
     setSaveStatus('saving');
     const timer = setTimeout(() => {
       try {
-        localStorage.setItem(GUEST_STORAGE_KEY, JSON.stringify(resumeData));
+        localStorage.setItem(GUEST_STORAGE_KEY, serializeResume(resumeData));
         setLastSavedData(JSON.parse(JSON.stringify(resumeData)));
         setSaveStatus('saved');
       } catch (err) {
@@ -361,6 +368,8 @@ const ResumeBuilder = () => {
   };
 
   const saveResume = async () => {
+    if (isSaving) return false;
+    setIsSaving(true);
     try {
       if (!token) {
         localStorage.setItem(GUEST_STORAGE_KEY, JSON.stringify(resumeData));
@@ -375,7 +384,7 @@ const ResumeBuilder = () => {
       if (!targetResumeId || targetResumeId === 'guest' || targetResumeId === 'new' || targetResumeId === 'free') {
         const { data: createData } = await api.post(
           '/api/resumes/create',
-          { title: resumeData.title || 'Untitled CV', template: resumeData.template || 'classic' },
+          { title: resumeData.title?.replaceAll('\u0000', '') || 'Untitled CV', template: resumeData.template || 'classic' },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         targetResumeId = createData.resumeId || createData.resume.id;
@@ -397,7 +406,7 @@ const ResumeBuilder = () => {
 
       const formData = new FormData();
       formData.append('resumeId', targetResumeId);
-      formData.append('resumeData', JSON.stringify(updatedResumeData));
+      formData.append('resumeData', serializeResume(updatedResumeData));
       if (removeBackground) formData.append('removeBackground', 'yes');
       if (resumeData.personal_info.image_url instanceof File) {
         formData.append('image', resumeData.personal_info.image_url);
@@ -445,6 +454,8 @@ const ResumeBuilder = () => {
     } catch (error) {
       toast.error(error?.response?.data?.message || error.message || 'Failed to save');
       return false;
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -603,11 +614,13 @@ const ResumeBuilder = () => {
           {/* Quick Save button */}
           <button
             onClick={saveResume}
-            className="flex items-center p-2 px-3.5 gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition-colors cursor-pointer"
+            disabled={isSaving}
+            aria-busy={isSaving}
+            className="flex items-center p-2 px-3.5 gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition-colors cursor-pointer disabled:cursor-wait"
             title="Save changes"
           >
-            <Save className="size-3.5" />
-            <span>{isGuest ? 'Save Now' : 'Save'}</span>
+            {isSaving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
+            <span>{isSaving ? 'Saving…' : isGuest ? 'Save Now' : 'Save'}</span>
           </button>
 
           {/* Reset sample button for guest users */}
@@ -933,9 +946,10 @@ const ResumeBuilder = () => {
             <div className="flex flex-col gap-2">
               <button
                 onClick={handleSaveAndLeave}
+                disabled={isSaving}
                 className="w-full py-2.5 bg-[#F46200] hover:bg-[#DC5800] text-white font-bold rounded-xl transition-all text-xs cursor-pointer shadow-xs"
               >
-                Save & Leave
+                {isSaving ? 'Saving…' : 'Save & Leave'}
               </button>
               <button
                 onClick={() => {
