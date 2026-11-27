@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { interviewCategories, interviewQuestions } from '../data/interviewQuestions.js';
 
 const focusStyle = 'focus-visible:outline-2 focus-visible:outline-[#F46200]';
@@ -104,6 +105,9 @@ export default function InterviewPrep() {
           <p className="mt-2 max-w-xl text-sm leading-6 text-[#5A554E] sm:text-base">
             Practice common interview questions and prepare questions to ask employers.
           </p>
+          <Link to="/app/interview" className="mt-3 inline-flex rounded-sm text-sm font-semibold text-[#AD4500] underline underline-offset-4 focus-visible:outline-brand-orange">
+            Open practice tools and STAR guide
+          </Link>
         </header>
 
         <div className="grid items-start gap-5 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-7">

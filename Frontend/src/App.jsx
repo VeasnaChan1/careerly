@@ -16,11 +16,13 @@ import LenisScroll from './components/lenis-scroll';
 
 import Layout from './pages/Layout';
 import Dashboard from './pages/Dashboard';
+import InterviewPractice from './pages/InterviewPractice';
 import InterviewPrep from './pages/InterviewPrep';
 import ResumeBuilder from './pages/ResumeBuilder';
 import Preview from './pages/Preview';
 import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
+import JobFinder from './pages/JobFinder';
 
 import api from './config/api';
 import { login, setLoading } from './app/features/authSlice';
@@ -121,10 +123,14 @@ export default function App() {
   useEffect(() => {
     if (location.pathname === '/' || location.pathname === '/about') {
       document.title = 'Careerly — Build your CV. Find your job. Ace your interview.';
-    } else if (location.pathname.startsWith('/app/profile')) {
-      document.title = 'My Profile — Careerly';
+    } else if (location.pathname.startsWith('/jobs') || location.pathname.startsWith('/app/jobs')) {
+      document.title = 'Jobs in Cambodia — Careerly';
     } else if (location.pathname === '/app/interview-prep') {
       document.title = 'Interview Prep - Careerly';
+    } else if (location.pathname.startsWith('/interview') || location.pathname.startsWith('/app/interview')) {
+      document.title = 'Interview Preparation & Practice — Careerly';
+    } else if (location.pathname.startsWith('/app/profile')) {
+      document.title = 'My Profile — Careerly';
     } else if (location.pathname === '/app') {
       document.title = 'Dashboard — Careerly';
     }
@@ -173,12 +179,16 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPassword key={location.hash} />} />
         <Route path="/verify-email" element={<ResetPassword key={location.hash} verifyEmail />} />
         <Route path="/about" element={<Footer />} />
+        <Route path="/jobs" element={<JobFinder publicMode={true} />} />
+        <Route path="/interview" element={<InterviewPractice publicMode />} />
 
         {/* Dashboard and CV Builder Layout */}
         <Route path="app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="my-cvs" element={<Dashboard />} />
           <Route path="interview-prep" element={<InterviewPrep />} />
+          <Route path="jobs" element={<JobFinder publicMode={false} />} />
+          <Route path="interview" element={<InterviewPractice publicMode={false} />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
           <Route path="builder" element={<ResumeBuilder />} />
           <Route path="profile" element={<Profile />} />

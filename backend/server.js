@@ -8,6 +8,10 @@ import { ensurePasswordResetTable } from "./db/ensurePasswordResetTable.js";
 import userRouter from "./routes/userRoute.js";
 import { resumeRouter } from "./routes/resumeRoute.js";
 import { aiRouter } from "./routes/aiRoute.js";
+import { interviewRouter } from "./routes/interviewRoute.js";
+import { jobRouter } from "./routes/jobRoute.js";
+import { seedInterviewQuestions } from "./prisma/seedInterview.js";
+import { seedJobs } from "./prisma/seedJobs.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
 import dotenv from "dotenv";
@@ -33,7 +37,11 @@ app.get("/", (req, res) => res.send("CAREERLY Backend Server is running"));
 app.use("/api/users", userRouter);
 app.use("/api/resumes", resumeRouter);
 app.use("/api/ai", aiRouter);
+app.use("/api/interview", interviewRouter);
+app.use("/api/jobs", jobRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+let serverInstance = null;
 
 async function startServer() {
   try {
@@ -46,8 +54,19 @@ async function startServer() {
     });
     console.log("✅ PostgreSQL Database connected successfully via Prisma");
 
-    app.listen(PORT, () => {
+    serverInstance = app.listen(PORT, () => {
       console.log(`🚀 CAREERLY Server running on http://localhost:${PORT}`);
+    });
+
+    // Keep event loop active
+    setInterval(() => {}, 1000 * 60 * 60);
+
+    // Run seeding in background after server is listening
+    seedInterviewQuestions().catch((error) => {
+      console.error("Interview seeding notice:", error.message);
+    });
+    seedJobs().catch((error) => {
+      console.error("Job seeding notice:", error.message);
     });
   } catch (error) {
     console.error("❌ Database connection failed:", error);

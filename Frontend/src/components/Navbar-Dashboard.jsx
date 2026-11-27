@@ -10,9 +10,10 @@ const NavbarDashboard = () => {
   const location = useLocation();
 
   const isMyCVsActive = location.pathname === '/app' || location.pathname === '/app/my-cvs';
-  const isInterviewPrepActive = location.pathname === '/app/interview-prep';
+  const isInterviewPrepActive = ['/app/interview', '/app/interview-prep'].includes(location.pathname);
   const navigationLinks = [
-    { to: '/app', label: 'My CVs', active: isMyCVsActive },
+    ...(user ? [{ to: '/app', label: 'My CVs', active: isMyCVsActive }] : []),
+    { to: '/app/jobs', label: 'Jobs', active: location.pathname === '/app/jobs' },
     { to: '/app/interview-prep', label: 'Interview Prep', active: isInterviewPrepActive },
   ];
 
@@ -52,25 +53,23 @@ const NavbarDashboard = () => {
           <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#F46200] translate-y-[-4px]" aria-hidden="true"></span>
         </Link>
 
-        {user && (
-          <div className="col-span-2 row-start-2 flex items-center justify-center gap-4 pb-1 sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:gap-6 sm:pb-0">
-            {navigationLinks.map(({ to, label, active }) => (
-              <Link
-                key={to}
-                to={to}
-                aria-current={active ? 'page' : undefined}
-                onClick={(e) => handleNavigation(to, e)}
-                className={`flex min-h-11 items-center whitespace-nowrap rounded-md px-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-brand-orange motion-reduce:transition-none ${
-                  active
-                    ? 'text-charcoal underline decoration-brand-orange decoration-2 underline-offset-8'
-                    : 'text-ink-muted hover:text-charcoal'
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
-          </div>
-        )}
+        <div className="col-span-2 row-start-2 flex items-center justify-center gap-2 pb-1 sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:gap-6 sm:pb-0">
+          {navigationLinks.map(({ to, label, active }) => (
+            <Link
+              key={to}
+              to={to}
+              aria-current={active ? 'page' : undefined}
+              onClick={(e) => handleNavigation(to, e)}
+              className={`flex min-h-11 items-center whitespace-nowrap rounded-md px-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-brand-orange motion-reduce:transition-none ${
+                active
+                  ? 'text-charcoal underline decoration-brand-orange decoration-2 underline-offset-8'
+                  : 'text-ink-muted hover:text-charcoal'
+              }`}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
 
         <div className="col-start-2 row-start-1 flex items-center gap-3 justify-self-end text-sm sm:col-start-3 sm:gap-4">
           {user ? (

@@ -21,6 +21,18 @@ export default function Navbar() {
         { id: 'pricing', linkId: 'pricing' },
       ];
 
+      // If on jobs page, set active section
+      if (window.location.pathname.startsWith('/jobs')) {
+        setActiveSection('jobs');
+        return;
+      }
+
+      // If on interview page, set active section
+      if (window.location.pathname.startsWith('/interview')) {
+        setActiveSection('interview');
+        return;
+      }
+
       // If at top hero area, reset active section
       if (scrollY < 120) {
         setActiveSection('');
@@ -47,6 +59,8 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
+    { label: 'Jobs', href: '/jobs', id: 'jobs', isRoute: true },
+    { label: 'Interview Prep', href: '/interview', id: 'interview', isRoute: true },
     { label: 'Features', href: '/#features', id: 'features' },
     { label: 'How it works', href: '/#how-it-works', id: 'how-it-works' },
     { label: 'Pricing', href: '/#pricing', id: 'pricing' },
@@ -118,18 +132,38 @@ export default function Navbar() {
           <nav className="hidden md:flex items-center gap-1 sm:gap-1.5 lg:gap-2" aria-label="Main Navigation">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
+              const linkClasses = `relative font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#F46200] ${
+                isScrolled ? 'text-xs sm:text-sm px-3.5 py-1.5' : 'text-sm px-3.5 py-2'
+              } ${
+                isActive
+                  ? 'text-[#F46200] font-semibold bg-[#FFF3EB] shadow-xs ring-1 ring-[#F46200]/25'
+                  : 'text-[#5A554E] hover:text-[#F46200] hover:bg-black/[0.04] active:bg-black/[0.07]'
+              }`;
+
+              if (link.isRoute) {
+                return (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className={linkClasses}
+                  >
+                    <span>{link.label}</span>
+                    {isActive && (
+                      <span
+                        className="inline-block w-1.5 h-1.5 rounded-full bg-[#F46200] ml-1.5 align-middle"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </Link>
+                );
+              }
+
               return (
                 <a
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.id)}
-                  className={`relative font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#F46200] ${
-                    isScrolled ? 'text-xs sm:text-sm px-3.5 py-1.5' : 'text-sm px-3.5 py-2'
-                  } ${
-                    isActive
-                      ? 'text-[#F46200] font-semibold bg-[#FFF3EB] shadow-xs ring-1 ring-[#F46200]/25'
-                      : 'text-[#5A554E] hover:text-[#F46200] hover:bg-black/[0.04] active:bg-black/[0.07]'
-                  }`}
+                  className={linkClasses}
                 >
                   <span>{link.label}</span>
                   {isActive && (
@@ -204,16 +238,32 @@ export default function Navbar() {
           <nav className="flex flex-col space-y-2">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
+              const linkClasses = `text-base font-medium px-3.5 py-2.5 rounded-xl transition-colors flex items-center justify-between ${
+                isActive
+                  ? 'text-[#F46200] font-semibold bg-[#FFF3EB] border border-[#F46200]/20'
+                  : 'text-[#2D2D2D] hover:text-[#F46200] hover:bg-black/[0.03]'
+              }`;
+
+              if (link.isRoute) {
+                return (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={linkClasses}
+                  >
+                    <span>{link.label}</span>
+                    {isActive && <span className="w-2 h-2 rounded-full bg-[#F46200]"></span>}
+                  </Link>
+                );
+              }
+
               return (
                 <a
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.id)}
-                  className={`text-base font-medium px-3.5 py-2.5 rounded-xl transition-colors flex items-center justify-between ${
-                    isActive
-                      ? 'text-[#F46200] font-semibold bg-[#FFF3EB] border border-[#F46200]/20'
-                      : 'text-[#2D2D2D] hover:text-[#F46200] hover:bg-black/[0.03]'
-                  }`}
+                  className={linkClasses}
                 >
                   <span>{link.label}</span>
                   {isActive && <span className="w-2 h-2 rounded-full bg-[#F46200]"></span>}
