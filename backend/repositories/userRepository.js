@@ -29,43 +29,10 @@ export async function getUserById(id) {
   }
 }
 
-export async function createUser(newUserData) {
-  try {
-    const userExist = await prisma.user.findUnique({
-      where: { email: newUserData.email }
-    });
-
-    if (userExist) {
-      const error = new Error("User already exists with this email");
-      error.statusCode = 400;
-      throw error;
-    }
-
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(newUserData.password || newUserData.password_hash, saltRounds);
-
-    const newUser = await prisma.user.create({
-      data: {
-        name: newUserData.name || newUserData.fullName || (newUserData.email ? newUserData.email.split("@")[0] : "User"),
-        email: newUserData.email,
-        password_hash: passwordHash,
-        role: newUserData.role || "user"
-      }
-    });
-
-    return newUser;
-  } catch (error) {
-    console.error("Repository error creating user:", error);
-    throw error;
-  }
-}
-
 export async function updateUser(id, updatedData) {
   try {
     const dataToUpdate = {};
     if (updatedData.name !== undefined) dataToUpdate.name = updatedData.name;
-    if (updatedData.email !== undefined) dataToUpdate.email = updatedData.email;
-    if (updatedData.role !== undefined) dataToUpdate.role = updatedData.role;
     if (updatedData.password) {
       dataToUpdate.password_hash = await bcrypt.hash(updatedData.password, 10);
     }
@@ -95,9 +62,12 @@ export async function deleteUser(id) {
 
 export async function loginUser({ email, password }) {
   try {
-    const user = await prisma.user.findUnique({
-      where: { email }
-    });
+    const address = email.trim();
+    let user = await prisma.user.findUnique({ where: { email: address } });
+    const normalized = address.toLowerCase();
+    if (!user && normalized !== address) {
+      user = await prisma.user.findUnique({ where: { email: normalized } });
+    }
 
     if (!user) {
       const error = new Error("Invalid email or password");

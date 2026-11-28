@@ -146,6 +146,8 @@ const PersonalInfoForm = ({ data, onChange, removeBackground, setRemoveBackgroun
               </label>
               <input
                 type={field.type}
+                spellCheck={field.type === 'text' ? 'true' : undefined}
+                lang={field.type === 'text' ? 'en' : undefined}
                 value={data[field.key] || ''}
                 onChange={(e) => handleChange(field.key, e.target.value)}
                 className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F46200]/20 focus:border-[#F46200] outline-none transition-all text-sm text-[#2D2D2D]"

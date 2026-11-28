@@ -104,6 +104,21 @@
   }
 }
 
+@keyframes toastSlideDown {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -16px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+.animate-toast-in {
+  animation: 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards toastSlideDown;
+}
+
 /* Custom rounded checkbox */
 .custom-checkbox {
   cursor: pointer;

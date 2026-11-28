@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../app/features/authSlice';
 import api from '../../config/api';
-import { Eye, EyeOff, ArrowLeft, Check, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Check, X, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
 
 // Google Official 4-Color SVG Icon
 export function GoogleIcon({ className = "h-5 w-5" }) {
@@ -348,7 +348,7 @@ export function SignUpPage({
       Create your <span className="font-serif italic font-normal text-[#F46200]">free account</span>
     </span>
   ),
-  description = "Join thousands of Cambodian students and graduates landing jobs with Careerly.",
+  description = "Enter your email and choose a password.",
   heroImageSrc = defaultHeroImage,
   testimonials = defaultCareerlyTestimonials,
   onSignUp,
@@ -356,28 +356,8 @@ export function SignUpPage({
   onSignIn,
   onBackToHome,
 }) {
-  const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("student");
-  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  // Simple password strength calculation
-  const getPasswordStrength = (pwd) => {
-    if (!pwd) return { label: "", percent: 0, color: "bg-gray-200" };
-    if (pwd.length < 6) return { label: "Too short", percent: 25, color: "bg-red-400" };
-    const hasNum = /\d/.test(pwd);
-    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
-    if (pwd.length >= 8 && hasNum && hasSpecial) {
-      return { label: "Strong", percent: 100, color: "bg-emerald-500" };
-    }
-    if (pwd.length >= 6) {
-      return { label: "Medium", percent: 65, color: "bg-amber-400" };
-    }
-    return { label: "Weak", percent: 40, color: "bg-red-400" };
-  };
-
-  const strength = getPasswordStrength(password);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -385,15 +365,7 @@ export function SignUpPage({
     setIsLoading(true);
 
     try {
-      if (onSignUp) {
-        await onSignUp(e);
-      } else {
-        const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData.entries());
-        data.role = selectedRole;
-        console.log("Sign Up submitted:", data);
-        alert(`Account created successfully for ${data.fullName || "User"}! Welcome to Careerly.`);
-      }
+      await onSignUp(e);
     } catch (err) {
       setErrorMessage(err.message || "Failed to create account. Please try again.");
     } finally {
@@ -449,49 +421,6 @@ export function SignUpPage({
             )}
 
             <form className="space-y-4" onSubmit={handleSubmit}>
-              {/* Role Picker Pills */}
-              <div className="animate-element animate-delay-300">
-                <label className="block text-xs font-semibold text-[#5A554E] uppercase tracking-wider mb-2">
-                  I am a:
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: "student", label: "Student" },
-                    { id: "graduate", label: "Fresh Grad" },
-                    { id: "switcher", label: "Career Switcher" },
-                  ].map((role) => (
-                    <button
-                      key={role.id}
-                      type="button"
-                      onClick={() => setSelectedRole(role.id)}
-                      className={`py-2 px-2.5 rounded-xl text-xs font-medium border transition-all text-center cursor-pointer ${
-                        selectedRole === role.id
-                          ? "bg-[#FFF3EB] border-[#F46200] text-[#F46200] font-semibold ring-1 ring-[#F46200]"
-                          : "bg-white border-[#E7E2D8] text-[#5A554E] hover:border-[#D5CFC3]"
-                      }`}
-                    >
-                      {role.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Full Name */}
-              <div className="animate-element animate-delay-400">
-                <label className="block text-xs sm:text-sm font-medium text-[#5A554E] mb-1.5">
-                  Full Name
-                </label>
-                <GlassInputWrapper>
-                  <input
-                    name="fullName"
-                    type="text"
-                    required
-                    placeholder="e.g. Serey Vathana"
-                    className="w-full bg-transparent text-sm p-3.5 rounded-2xl text-[#2D2D2D] placeholder-[#8A847C] focus:outline-none"
-                  />
-                </GlassInputWrapper>
-              </div>
-
               {/* Email Address */}
               <div className="animate-element animate-delay-500">
                 <label className="block text-xs sm:text-sm font-medium text-[#5A554E] mb-1.5">
@@ -508,51 +437,13 @@ export function SignUpPage({
                 </GlassInputWrapper>
               </div>
 
-              {/* Password */}
-              <div className="animate-element animate-delay-600">
-                <label className="block text-xs sm:text-sm font-medium text-[#5A554E] mb-1.5">
-                  Create Password
-                </label>
+              <div>
+                <label htmlFor="signup-password" className="block text-xs sm:text-sm font-medium text-[#5A554E] mb-1.5">Password</label>
                 <GlassInputWrapper>
-                  <div className="relative">
-                    <input
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="At least 6 characters"
-                      className="w-full bg-transparent text-sm p-3.5 pr-12 rounded-2xl text-[#2D2D2D] placeholder-[#8A847C] focus:outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-3.5 flex items-center text-[#8A847C] hover:text-[#2D2D2D] transition-colors"
-                      aria-label={showPassword ? "Hide password" : "Show password"}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
+                  <input id="signup-password" name="password" type="password" autoComplete="new-password"
+                    required minLength={8} placeholder="At least 8 characters"
+                    className="w-full bg-transparent text-sm p-3.5 rounded-2xl text-[#2D2D2D] placeholder-[#8A847C] focus:outline-none" />
                 </GlassInputWrapper>
-
-                {/* Password strength bar */}
-                {password && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <div className="h-1.5 flex-1 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full transition-all duration-300 ${strength.color}`}
-                        style={{ width: `${strength.percent}%` }}
-                      />
-                    </div>
-                    <span className="text-[11px] font-medium text-[#5A554E]">
-                      {strength.label}
-                    </span>
-                  </div>
-                )}
               </div>
 
               {/* Terms checkbox */}
@@ -586,10 +477,10 @@ export function SignUpPage({
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Creating your account...</span>
+                    <span>Creating account...</span>
                   </>
                 ) : (
-                  <span>Create Account</span>
+                  <span>Create account</span>
                 )}
               </button>
             </form>
@@ -665,13 +556,36 @@ export function AuthPage({
 }) {
   const [mode, setMode] = useState(initialMode); // 'signin' | 'signup' | 'reset'
   const [resetSent, setResetSent] = useState(false);
+  const [resetError, setResetError] = useState("");
   const [resetEmail, setResetEmail] = useState("");
-  const [toastMessage, setToastMessage] = useState("");
+  const [isSendingReset, setIsSendingReset] = useState(false);
+  const [toast, setToast] = useState(null); // { message: string, type: 'error' | 'success' | 'info' }
+  const toastTimeoutRef = useRef(null);
 
-  const showToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(""), 4000);
+  const showToast = (message, type = "success") => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    setToast({ message, type });
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null);
+    }, 4500);
   };
+
+  const hideToast = () => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    setToast(null);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const dispatch = typeof useDispatch === 'function' ? useDispatch() : null;
   const navigate = typeof useNavigate === 'function' ? useNavigate() : null;
@@ -687,62 +601,94 @@ export function AuthPage({
       });
       localStorage.setItem('token', res.data.token);
       if (dispatch) dispatch(login({ token: res.data.token, user: res.data.user }));
-      showToast(`Welcome back, ${res.data.user?.name || res.data.user?.email || 'User'}!`);
+      showToast(`Welcome back, ${res.data.user?.name || res.data.user?.email || 'User'}!`, 'success');
       setTimeout(() => {
         if (navigate) navigate('/app');
         else if (onNavigateHome) onNavigateHome();
       }, 700);
     } catch (err) {
-      showToast(err?.response?.data?.message || err.message || 'Login failed');
+      const backendMessage = err?.response?.data?.message || err?.response?.data?.error;
+      const displayMessage = backendMessage || (err?.response?.status === 401 ? 'Invalid email or password' : (err.message || 'Invalid email or password'));
+      showToast(displayMessage, 'error');
     }
   };
 
   const handleSignUp = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const form = new FormData(e.currentTarget);
     try {
-      const res = await api.post('/api/users/register', {
-        name: data.fullName,
-        email: data.email,
-        password: data.password
-      });
-      localStorage.setItem('token', res.data.token);
-      if (dispatch) dispatch(login({ token: res.data.token, user: res.data.user }));
-      showToast(`Welcome to Careerly, ${data.fullName || 'User'}! Account created successfully.`);
-      setTimeout(() => {
-        if (navigate) navigate('/app');
-        else if (onNavigateHome) onNavigateHome();
-      }, 700);
-    } catch (err) {
-      showToast(err?.response?.data?.message || err.message || 'Registration failed');
+      await api.post('/api/users/register', { email: form.get('email'), password: form.get('password') });
+      setMode("signin");
+      showToast("Account created. Sign in with your email and password.");
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Could not create your account. Try again.');
     }
   };
 
   const handleGoogleSignIn = () => {
-    showToast("Connecting with Google OAuth...");
+    showToast("Connecting with Google OAuth...", 'info');
     setTimeout(() => {
-      showToast("Google Authentication successful! Welcome.");
+      showToast("Google Authentication successful! Welcome.", 'success');
       setTimeout(() => {
         if (onNavigateHome) onNavigateHome();
       }, 1000);
     }, 800);
   };
 
-  const handleResetPasswordSubmit = (e) => {
+  const handleResetPasswordSubmit = async (e) => {
     e.preventDefault();
-    setResetSent(true);
-    showToast(`Password reset link sent to ${resetEmail || "your email"}`);
+    setIsSendingReset(true);
+    setResetError("");
+    try {
+      await api.post("/api/users/forgot-password", { email: resetEmail.trim() });
+      setResetSent(true);
+    } catch (error) {
+      setResetError(error.response?.data?.message || "Could not reach Careerly. Try again.");
+    } finally {
+      setIsSendingReset(false);
+    }
   };
 
   return (
     <div className="relative">
       {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 animate-bounce">
-          <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#1F1F1F] text-white text-xs sm:text-sm font-medium shadow-2xl border border-white/10">
-            <Check className="w-4 h-4 text-emerald-400" />
-            <span>{toastMessage}</span>
+      {toast && (
+        <div className="fixed top-6 left-1/2 z-50 animate-toast-in pointer-events-auto max-w-[92vw] sm:max-w-md">
+          <div
+            role="alert"
+            className={`inline-flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl border backdrop-blur-md transition-all ${
+              toast.type === 'error'
+                ? 'bg-white border-[#D4111A]/30 text-[#2D2D2D] shadow-[0_16px_36px_rgba(212,17,26,0.14),0_4px_12px_rgba(45,45,45,0.06)] ring-4 ring-[#D4111A]/5'
+                : toast.type === 'success'
+                ? 'bg-white border-[#F46200]/30 text-[#2D2D2D] shadow-[0_16px_36px_rgba(244,98,0,0.14),0_4px_12px_rgba(45,45,45,0.06)] ring-4 ring-[#F46200]/5'
+                : 'bg-white border-[#E7E2D8] text-[#2D2D2D] shadow-[0_16px_36px_rgba(45,45,45,0.08)]'
+            }`}
+          >
+            {toast.type === 'error' ? (
+              <div className="w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full bg-[#D4111A] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" />
+              </div>
+            ) : toast.type === 'success' ? (
+              <div className="w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full bg-[#F46200] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" />
+              </div>
+            ) : (
+              <div className="w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full bg-[#FFF3EB] text-[#F46200] border border-[#F46200]/25 flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-3.5 h-3.5" />
+              </div>
+            )}
+
+            <span className="text-xs sm:text-sm font-semibold text-[#2D2D2D] tracking-tight break-words">
+              {toast.message}
+            </span>
+
+            <button
+              type="button"
+              onClick={hideToast}
+              className="text-[#8A847C] hover:text-[#2D2D2D] hover:bg-black/5 p-1 rounded-lg transition-colors cursor-pointer flex-shrink-0 ml-1.5"
+              aria-label="Dismiss notification"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       )}
@@ -753,6 +699,7 @@ export function AuthPage({
           <div className="w-full max-w-md bg-white rounded-3xl p-8 sm:p-10 border border-[#E7E2D8] shadow-[0_20px_50px_rgba(0,0,0,0.06)]">
             <button
               type="button"
+              disabled={isSendingReset}
               onClick={() => {
                 setMode("signin");
                 setResetSent(false);
@@ -770,7 +717,7 @@ export function AuthPage({
                 </div>
                 <h2 className="text-2xl font-bold font-serif text-[#2D2D2D]">Check your inbox</h2>
                 <p className="text-sm text-[#5A554E] leading-relaxed">
-                  We've sent a password reset link to <strong className="text-[#2D2D2D]">{resetEmail}</strong>. Please check your spam folder if you don't see it within a couple minutes.
+                  If a Careerly account exists for <strong className="text-[#2D2D2D]">{resetEmail}</strong>, look for “Reset your Careerly password” in your inbox or spam folder.
                 </p>
                 <button
                   type="button"
@@ -793,14 +740,18 @@ export function AuthPage({
                 </p>
 
                 <form className="mt-6 space-y-4" onSubmit={handleResetPasswordSubmit}>
+                  {resetError && <p role="alert" className="text-sm text-red-700">{resetError}</p>}
                   <div>
-                    <label className="block text-xs font-medium text-[#5A554E] mb-1.5">
+                    <label htmlFor="reset-email" className="block text-xs font-medium text-[#5A554E] mb-1.5">
                       Email Address
                     </label>
                     <GlassInputWrapper>
                       <input
+                        id="reset-email"
                         type="email"
+                        autoComplete="email"
                         required
+                        disabled={isSendingReset}
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         placeholder="name@example.com"
@@ -811,9 +762,10 @@ export function AuthPage({
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 rounded-2xl bg-[#F46200] hover:bg-[#DC5800] text-white font-semibold text-sm transition-all shadow-sm cursor-pointer"
+                    disabled={isSendingReset}
+                    className="w-full py-3.5 rounded-2xl bg-[#F46200] hover:bg-[#DC5800] text-white font-semibold text-sm transition-all shadow-sm cursor-pointer disabled:opacity-70"
                   >
-                    Send Reset Link
+                    {isSendingReset ? "Requesting link…" : "Send reset link"}
                   </button>
                 </form>
               </div>
@@ -830,7 +782,7 @@ export function AuthPage({
       ) : (
         <SignInPage
           onCreateAccount={() => setMode("signup")}
-          onResetPassword={() => setMode("reset")}
+          onResetPassword={() => { setResetError(""); setMode("reset"); }}
           onSignIn={handleSignIn}
           onGoogleSignIn={handleGoogleSignIn}
           onBackToHome={onNavigateHome}

@@ -6,12 +6,16 @@ import {
   duplicateResume,
   getPublicResumeById,
   getResumeById,
+  getUserResumes,
   updateResume
 } from "../controllers/resumeController.js";
 import { upload } from "../config/multer.js";
 
 export const resumeRouter = express.Router();
 
+resumeRouter.get("/", protect, getUserResumes);
+resumeRouter.get("/my-cvs", protect, getUserResumes);
+resumeRouter.get("/my-resumes", protect, getUserResumes);
 resumeRouter.post("/create", protect, createResume);
 resumeRouter.post("/duplicate/:resumeId", protect, duplicateResume);
 resumeRouter.put("/update", upload.single("image"), protect, updateResume);

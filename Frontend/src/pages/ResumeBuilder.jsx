@@ -37,6 +37,12 @@ import toast from 'react-hot-toast';
 const GUEST_STORAGE_KEY = 'careerly_guest_resume';
 const GUEST_SECTION_KEY = 'careerly_guest_section';
 
+function serializeResume(data) {
+  return JSON.stringify(data, (_, value) =>
+    typeof value === 'string' ? value.replaceAll('\u0000', '') : value
+  );
+}
+
 const defaultStarterResume = {
   _id: 'guest',
   title: 'My Professional CV',
@@ -56,6 +62,7 @@ const defaultStarterResume = {
     {
       company: 'Canadia Bank Digital Lab',
       position: 'Frontend Developer Intern',
+      job_title: 'Frontend Developer Intern',
       start_date: '2023-07',
       end_date: '2023-12',
       is_current: false,
@@ -63,6 +70,7 @@ const defaultStarterResume = {
         '<p>• Built and optimized 4 responsive React dashboard modules, improving mobile load times by 32%.</p><p>• Collaborated with backend engineers to integrate RESTful APIs and ensure data consistency.</p>'
     }
   ],
+  
   education: [
     {
       institution: 'Cambodia Academy of Digital Technology (CADT)',
@@ -81,12 +89,12 @@ const defaultStarterResume = {
     }
   ],
   skills: [
-    'JavaScript (ES6+)',
-    'React.js',
-    'Tailwind CSS',
-    'HTML5 & CSS3',
-    'Git & GitHub',
-    'REST APIs'
+    { skill_name: 'JavaScript (ES6+)', proficiency: 'Intermediate' },
+    { skill_name: 'React.js', proficiency: 'Intermediate' },
+    { skill_name: 'Tailwind CSS', proficiency: 'Intermediate' },
+    { skill_name: 'HTML5 & CSS3', proficiency: 'Intermediate' },
+    { skill_name: 'Git & GitHub', proficiency: 'Intermediate' },
+    { skill_name: 'REST APIs', proficiency: 'Intermediate' }
   ],
   template: 'classic',
   accent_color: '#F46200',
@@ -152,6 +160,7 @@ const ResumeBuilder = () => {
   });
 
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved', 'saving'
+  const [isSaving, setIsSaving] = useState(false);
   const [removeBackground, setRemoveBackground] = useState(false);
   const [showVisibilityModal, setShowVisibilityModal] = useState(false);
   const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
@@ -188,7 +197,7 @@ const ResumeBuilder = () => {
     setSaveStatus('saving');
     const timer = setTimeout(() => {
       try {
-        localStorage.setItem(GUEST_STORAGE_KEY, JSON.stringify(resumeData));
+        localStorage.setItem(GUEST_STORAGE_KEY, serializeResume(resumeData));
         setLastSavedData(JSON.parse(JSON.stringify(resumeData)));
         setSaveStatus('saved');
       } catch (err) {
@@ -238,7 +247,7 @@ const ResumeBuilder = () => {
           };
           setResumeData(merged);
           setLastSavedData(JSON.parse(JSON.stringify(merged)));
-          document.title = merged.title || 'Careerly CV Builder';
+          document.title = merged.title ? `${merged.title} — Careerly` : 'Careerly CV Builder';
           return;
         } catch (e) {
           console.error('Failed to parse cached guest resume:', e);
@@ -246,7 +255,7 @@ const ResumeBuilder = () => {
       }
       setResumeData(defaultStarterResume);
       setLastSavedData(JSON.parse(JSON.stringify(defaultStarterResume)));
-      document.title = 'Careerly CV Builder (Free Mode)';
+      document.title = 'Careerly CV Builder';
       return;
     }
 
@@ -264,10 +273,34 @@ const ResumeBuilder = () => {
           title: dbResume.title || 'Untitled Resume',
           personal_info: dbResume.personal_info || {},
           professional_summary: dbResume.professional_summary || '',
-          experience: dbResume.experiences || [],
-          education: dbResume.education || [],
-          project: dbResume.projects || [],
-          skills: dbResume.skills || [],
+          experience: (dbResume.experiences || []).map((exp) => ({
+            company: exp.company || '',
+            position:
+              typeof exp.position === 'string' && isNaN(Number(exp.position)) && exp.position !== ''
+                ? exp.position
+                : exp.job_title || exp.position || '',
+            job_title: exp.job_title || (typeof exp.position === 'string' ? exp.position : ''),
+            start_date: exp.start_date || '',
+            end_date: exp.end_date || '',
+            is_current: !!exp.is_current,
+            description: exp.description || ''
+          })),
+          education: (dbResume.education || []).map((edu) => ({
+            institution: edu.institution || '',
+            degree: edu.degree || '',
+            field: edu.field || '',
+            graduation_date: edu.graduation_date || '',
+            gpa: edu.gpa || ''
+          })),
+          project: (dbResume.projects || []).map((proj) => ({
+            name: proj.name || '',
+            type: proj.type || '',
+            description: proj.description || ''
+          })),
+          skills: (dbResume.skills || []).map((sk) => ({
+            skill_name: typeof sk === 'string' ? sk : sk.skill_name || '',
+            proficiency: (typeof sk === 'object' && sk.proficiency) || 'Intermediate'
+          })),
           template: dbResume.template || 'classic',
           accent_color: dbResume.accent_color || '#F46200',
           public: dbResume.is_public || false
@@ -276,7 +309,7 @@ const ResumeBuilder = () => {
         setResumeData(mappedData);
         setLastSavedData(JSON.parse(JSON.stringify(mappedData)));
         localStorage.setItem('lastActiveResumeBuilder', `/app/builder/${resumeId}`);
-        document.title = dbResume.title || 'Careerly CV Builder';
+        document.title = dbResume.title ? `${dbResume.title} — Careerly` : 'Careerly CV Builder';
       }
     } catch (error) {
       console.error('Error loading resume details:', error);
@@ -285,6 +318,9 @@ const ResumeBuilder = () => {
 
   useEffect(() => {
     loadExistingResume();
+    return () => {
+      document.title = 'Careerly — Build your CV. Find your job. Ace your interview.';
+    };
   }, [resumeId, token]);
 
   useEffect(() => {
@@ -332,8 +368,10 @@ const ResumeBuilder = () => {
   };
 
   const saveResume = async () => {
+    if (isSaving) return false;
+    setIsSaving(true);
     try {
-      if (isGuest) {
+      if (!token) {
         localStorage.setItem(GUEST_STORAGE_KEY, JSON.stringify(resumeData));
         setLastSavedData(JSON.parse(JSON.stringify(resumeData)));
         setSaveStatus('saved');
@@ -342,14 +380,33 @@ const ResumeBuilder = () => {
         return true;
       }
 
+      let targetResumeId = resumeId;
+      if (!targetResumeId || targetResumeId === 'guest' || targetResumeId === 'new' || targetResumeId === 'free') {
+        const { data: createData } = await api.post(
+          '/api/resumes/create',
+          { title: resumeData.title?.replaceAll('\u0000', '') || 'Untitled CV', template: resumeData.template || 'classic' },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        targetResumeId = createData.resumeId || createData.resume.id;
+        navigate(`/app/builder/${targetResumeId}`, { replace: true });
+      }
+
       let updatedResumeData = structuredClone(resumeData);
       if (typeof resumeData.personal_info.image_url === 'object') {
         delete updatedResumeData.personal_info.image_url;
       }
 
+      if (Array.isArray(updatedResumeData.experience)) {
+        updatedResumeData.experience = updatedResumeData.experience.map((exp, idx) => ({
+          ...exp,
+          position: idx,
+          job_title: exp.job_title || exp.position || ''
+        }));
+      }
+
       const formData = new FormData();
-      formData.append('resumeId', resumeId);
-      formData.append('resumeData', JSON.stringify(updatedResumeData));
+      formData.append('resumeId', targetResumeId);
+      formData.append('resumeData', serializeResume(updatedResumeData));
       if (removeBackground) formData.append('removeBackground', 'yes');
       if (resumeData.personal_info.image_url instanceof File) {
         formData.append('image', resumeData.personal_info.image_url);
@@ -366,10 +423,24 @@ const ResumeBuilder = () => {
         title: data.resume.title || resumeData.title,
         personal_info: data.resume.personal_info || {},
         professional_summary: data.resume.professional_summary || '',
-        experience: data.resume.experiences || [],
+        experience: (data.resume.experiences || []).map((exp) => ({
+          company: exp.company || '',
+          position:
+            typeof exp.position === 'string' && isNaN(Number(exp.position)) && exp.position !== ''
+              ? exp.position
+              : exp.job_title || exp.position || '',
+          job_title: exp.job_title || (typeof exp.position === 'string' ? exp.position : ''),
+          start_date: exp.start_date || '',
+          end_date: exp.end_date || '',
+          is_current: !!exp.is_current,
+          description: exp.description || ''
+        })),
         education: data.resume.education || [],
         project: data.resume.projects || [],
-        skills: data.resume.skills || [],
+        skills: (data.resume.skills || []).map((sk) => ({
+          skill_name: typeof sk === 'string' ? sk : sk.skill_name || '',
+          proficiency: (typeof sk === 'object' && sk.proficiency) || 'Intermediate'
+        })),
         template: data.resume.template || resumeData.template,
         accent_color: data.resume.accent_color || resumeData.accent_color,
         public: data.resume.is_public ?? resumeData.public
@@ -383,6 +454,8 @@ const ResumeBuilder = () => {
     } catch (error) {
       toast.error(error?.response?.data?.message || error.message || 'Failed to save');
       return false;
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -541,11 +614,13 @@ const ResumeBuilder = () => {
           {/* Quick Save button */}
           <button
             onClick={saveResume}
-            className="flex items-center p-2 px-3.5 gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition-colors cursor-pointer"
+            disabled={isSaving}
+            aria-busy={isSaving}
+            className="flex items-center p-2 px-3.5 gap-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition-colors cursor-pointer disabled:cursor-wait"
             title="Save changes"
           >
-            <Save className="size-3.5" />
-            <span>{isGuest ? 'Save Now' : 'Save'}</span>
+            {isSaving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
+            <span>{isSaving ? 'Saving…' : isGuest ? 'Save Now' : 'Save'}</span>
           </button>
 
           {/* Reset sample button for guest users */}
@@ -723,6 +798,13 @@ const ResumeBuilder = () => {
                     data={resumeData.professional_summary || ''}
                     onChange={(data) => setResumeData((prev) => ({ ...prev, professional_summary: data }))}
                     setResumeData={setResumeData}
+                    experience={resumeData.experience || []}
+                    skills={resumeData.skills || []}
+                    profession={resumeData.personal_info?.profession || ''}
+                    onNavigateSection={(sectionId) => {
+                      const idx = sections.findIndex((s) => s.id === sectionId);
+                      if (idx !== -1) setActiveSectionIndex(idx);
+                    }}
                   />
                 )}
 
@@ -864,9 +946,10 @@ const ResumeBuilder = () => {
             <div className="flex flex-col gap-2">
               <button
                 onClick={handleSaveAndLeave}
+                disabled={isSaving}
                 className="w-full py-2.5 bg-[#F46200] hover:bg-[#DC5800] text-white font-bold rounded-xl transition-all text-xs cursor-pointer shadow-xs"
               >
-                Save & Leave
+                {isSaving ? 'Saving…' : 'Save & Leave'}
               </button>
               <button
                 onClick={() => {

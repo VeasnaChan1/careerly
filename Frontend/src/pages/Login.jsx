@@ -1,5 +1,5 @@
 import { Lock, Mail, User2Icon, ArrowLeft, Eye, EyeOff } from 'lucide-react';
-import React, { useState } from 'react';
+import{ useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../app/features/authSlice.js';
@@ -19,12 +19,18 @@ export const Login = () => {
     email: '',
     password: '',
   });
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const { data } = await api.post(`/api/users/${state}`, formData);
+      if (state === 'register') {
+        toast.success(data.message);
+        setState('login');
+        return;
+      }
       dispatch(login(data));
       localStorage.setItem('token', data.token);
       toast.success(data.message);

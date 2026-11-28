@@ -62,6 +62,8 @@ const ProjectForm = ({data, onChange}) => {
                 value={project.name || ""}
                 onChange={(e) => updateProject(index, "name", e.target.value)}
                 type="text"
+                spellCheck="true"
+                lang="en"
                 placeholder='Project Name'
                 className=' px-3 py-2 text-sm rounded-lg' 
               />
@@ -70,6 +72,8 @@ const ProjectForm = ({data, onChange}) => {
                 value={project.type || ""}
                 onChange={(e) => updateProject(index, "type", e.target.value)}
                 type="text"
+                spellCheck="true"
+                lang="en"
                 placeholder='Project Type'
                 className=' px-3 py-2 text-sm rounded-lg' 
               />

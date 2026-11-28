@@ -1,10 +1,11 @@
 import express from "express";
 import { getJobs, getJobById } from "../controllers/jobController.js";
 
-const jobRouter = express.Router();
+export const jobRouter = express.Router();
 
+// Public Job Board Endpoints (CAR-17, CAR-2)
 jobRouter.get("/", getJobs);
-jobRouter.get("/get/:jobId", getJobById);
-jobRouter.get("/:jobId", getJobById);
+jobRouter.get("/get/:id", getJobById);
+jobRouter.get("/:id", getJobById);
 
 export default jobRouter;

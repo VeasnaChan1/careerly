@@ -2,12 +2,13 @@ import prisma from "../db/prisma.js";
 import { imageKit } from "../config/imageKit.js";
 import fs from "fs";
 import * as resumeRepository from "../repositories/resumeRepository.js";
+import { cleanResumeData } from "../utils/cleanResumeData.js";
 
 // POST /api/resumes/create
 export const createResume = async (req, res) => {
   try {
     const userId = req.userId;
-    const { title, template } = req.body;
+    const { title, template } = cleanResumeData(req.body);
 
     const newResume = await resumeRepository.createResume(userId, title, template);
 
@@ -228,6 +229,23 @@ export const duplicateResume = async (req, res) => {
   }
 };
 
+// GET /api/resumes (or /api/users/resumes)
+export const getUserResumes = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const resumes = await resumeRepository.getUserResumes(userId);
+    return res.status(200).json({
+      message: "Resumes fetched successfully",
+      resumes: resumes || []
+    });
+  } catch (error) {
+    console.error("Error fetching user resumes:", error);
+    return res.status(400).json({
+      message: error.message
+    });
+  }
+};
+
 // PUT /api/resumes/update
 export const updateResume = async (req, res) => {
   try {
@@ -235,7 +253,17 @@ export const updateResume = async (req, res) => {
     const { resumeId, resumeData, removeBackground } = req.body;
     const image = req.file;
 
-    const data = typeof resumeData === "string" ? JSON.parse(resumeData) : resumeData || {};
+    // Verify ownership: a user can never change another user's CV
+    const existingResume = await resumeRepository.getResumeById(resumeId, userId);
+    if (!existingResume) {
+      return res.status(404).json({
+        message: "Resume not found or you are not authorized to edit it"
+      });
+    }
+
+    const data = cleanResumeData(
+      typeof resumeData === "string" ? JSON.parse(resumeData) : resumeData || {}
+    );
 
     if (data.public !== undefined) {
       data.is_public = data.public;

@@ -30,7 +30,7 @@ const EducationForm = ({ data, onChange }) => {
       <div className=' flex items-center justify-between'>
         <div >
           <h3 className=' flex items-center gap-2 text-lg font-semibold'> Education </h3>
-          <p className=' text-sm text-gray-500'>Add your education details</p>
+          <p className=' text-sm text-gray-500'>Add your education  details</p>
         </div>
 
         <button 
@@ -68,6 +68,8 @@ const EducationForm = ({ data, onChange }) => {
                   value={education.institution || ""}
                   onChange={(e) => updateEducation(index, "institution", e.target.value)}
                   type="text"
+                  spellCheck="true"
+                  lang="en"
                   placeholder='Institution Name'
                   className=' px-3 py-2 text-sm ' 
                 />
@@ -76,6 +78,8 @@ const EducationForm = ({ data, onChange }) => {
                   value={education.degree || ""}
                   onChange={(e) => updateEducation(index, "degree", e.target.value)}
                   type="text"
+                  spellCheck="true"
+                  lang="en"
                   placeholder="Degree (e.g., Bachelor's, Master's)"
                   className=' px-3 py-2 text-sm' 
                 />
@@ -84,6 +88,8 @@ const EducationForm = ({ data, onChange }) => {
                   value={education.field || ""}
                   onChange={(e) => updateEducation(index, "field", e.target.value)}
                   type="text"
+                  spellCheck="true"
+                  lang="en"
                   className=' px-3 py-2 text-sm ' 
                   placeholder='Field of Study'
                 />

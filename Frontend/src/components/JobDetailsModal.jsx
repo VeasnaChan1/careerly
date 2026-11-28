@@ -214,6 +214,103 @@ export default function JobDetailsModal({
               )}
             </div>
           )}
+        {/* Sticky Modal Header */}
+        <div className="px-6 sm:px-8 py-5 border-b border-[#E7E2D8] bg-gradient-to-r from-[#FFF8F3] via-white to-[#FAF8F4] flex items-start justify-between gap-4 shrink-0">
+          {isLoading ? (
+            <div className="flex items-center gap-2 text-sm text-[#5A554E] py-2">
+              <Loader2 className="w-4 h-4 animate-spin text-[#F46200]" />
+              <span>Loading job detail...</span>
+            </div>
+          ) : job ? (
+            <div className="space-y-2.5 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#F46200] bg-[#FFF3EB] px-2.5 py-1 rounded-lg border border-[#FAD7C0]">
+                  <Building2 className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">{job.company}</span>
+                </span>
+
+                {job.job_type && (
+                  <span
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wide border ${badgeStyle}`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                    {job.job_type}
+                  </span>
+                )}
+
+                {job.status && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold capitalize bg-[#FAF8F4] text-[#5A554E] border border-[#E7E2D8]">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    {job.status}
+                  </span>
+                )}
+              </div>
+
+              <h2
+                id="job-details-modal-title"
+                className="font-serif text-2xl sm:text-3xl text-[#2D2D2D] leading-tight"
+              >
+                {job.title}
+              </h2>
+
+              {/* Metadata Row */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[#5A554E] pt-0.5">
+                {job.location && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#8A847C]" />
+                    {job.location}
+                  </span>
+                )}
+
+                {job.salary_range && (
+                  <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    <DollarSign className="w-3.5 h-3.5" />
+                    {job.salary_range}
+                  </span>
+                )}
+
+                {postedDate && (
+                  <span className="inline-flex items-center gap-1.5 text-[#8A847C]">
+                    <Clock className="w-3.5 h-3.5" />
+                    Posted {postedDate}
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-sm text-[#5A554E] py-2">
+              <Briefcase className="w-4 h-4 text-[#8A847C]" />
+              <span>Job details unavailable</span>
+            </div>
+          )}
+
+          {/* Top-right Action Buttons (Save + Close) */}
+          <div className="flex items-center gap-2 shrink-0">
+            {job && onToggleSave && (
+              <button
+                type="button"
+                onClick={(e) => onToggleSave(job.id, e)}
+                aria-label={isSaved ? 'Remove job from saved' : 'Save job'}
+                title={isSaved ? 'Saved' : 'Save job'}
+                className={`p-2 rounded-full border transition-all cursor-pointer ${
+                  isSaved
+                    ? 'bg-[#FFF3EB] border-[#FAD7C0] text-[#F46200]'
+                    : 'bg-white border-[#E7E2D8] text-[#5A554E] hover:text-[#2D2D2D] hover:bg-[#FAF8F4]'
+                }`}
+              >
+                {isSaved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close job details"
+              className="p-2 rounded-full bg-white border border-[#E7E2D8] text-[#5A554E] hover:text-[#2D2D2D] hover:bg-[#FAF8F4] transition-all cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* Scrollable Body */}
@@ -307,6 +404,7 @@ export default function JobDetailsModal({
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

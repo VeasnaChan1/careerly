@@ -1,1 +1,0 @@
-Hello, we are careerly and we are ready to help you land your first job.

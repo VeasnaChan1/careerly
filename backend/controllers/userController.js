@@ -40,31 +40,13 @@ export async function getUserById(req, res) {
   }
 }
 
-export async function createUser(req, res) {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
-    }
-
-    const newUser = await userRepository.createUser(req.body);
-    const token = generateToken(newUser.id);
-    const { password_hash, ...userData } = newUser;
-
-    return res.status(201).json({
-      message: "Registration successful",
-      token,
-      user: userData
-    });
-  } catch (error) {
-    console.error("Error creating user:", error);
-    const statusCode = error.statusCode || 500;
-    const message = error.message || "Server error";
-    return res.status(statusCode).json({ message });
-  }
-}
-
 export async function updateUser(req, res) {
+  if (req.params.id !== req.userId) {
+    return res.status(403).json({ message: "You can only update your own account." });
+  }
+  if (req.body?.email !== undefined) {
+    return res.status(400).json({ message: "Email changes are unavailable." });
+  }
   try {
     const updatedUser = await userRepository.updateUser(req.params.id, req.body);
     if (!updatedUser) {
@@ -91,7 +73,7 @@ export async function deleteUser(req, res) {
 export async function loginUser(req, res) {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
+    if (typeof email !== "string" || typeof password !== "string" || !email.trim() || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
 

@@ -1,14 +1,8 @@
-import { Briefcase, Loader, Plus, Sparkles, Trash2 } from 'lucide-react';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import api from '../config/api';
-import toast from 'react-hot-toast';
+import { Briefcase, Plus, Trash2 } from 'lucide-react';
+import React from 'react';
 import RichTextEditor from './RichTextEditor';
 
 const ExperienceForm = ({ data, onChange }) => {
-  const { token } = useSelector((state) => state.auth);
-  const [generatingIndex, setGeneratingIndex] = useState(-1);
-
   const addExperience = () => {
     const newExperience = {
       company: '',
@@ -32,29 +26,6 @@ const ExperienceForm = ({ data, onChange }) => {
     onChange(updated);
   };
 
-  const generateDescription = async (index) => {
-    setGeneratingIndex(index);
-    const experience = data[index];
-    const prompt = `Enhance this Job description "${experience.description || ''}" for the position of "${experience.position || experience.job_title || ''}" at "${experience.company || ''}"`;
-
-    try {
-      const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      const { data: resData } = await api.post(
-        '/api/ai/enhance-job-desc',
-        { userContent: prompt },
-        { headers }
-      );
-      if (resData && resData.output) {
-        updateExperience(index, 'description', resData.output);
-        toast.success('Job description enhanced!');
-      }
-    } catch (error) {
-      toast.error(error?.response?.data?.message || error.message || 'AI Enhancement failed');
-    } finally {
-      setGeneratingIndex(-1);
-    }
-  };
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -76,13 +47,13 @@ const ExperienceForm = ({ data, onChange }) => {
       {data.length === 0 ? (
         <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50/50">
           <Briefcase className="size-8 mx-auto text-gray-400 mb-2" />
-          <p className="text-sm font-medium text-gray-600">No experiences added yet</p>
+          <p className="text-sm font-medium text-gray-600">No experience added</p>
           <button
             type="button"
             onClick={addExperience}
             className="mt-3 text-xs font-semibold text-blue-600 hover:text-blue-700 underline cursor-pointer"
           >
-            + Add your first work experience
+            + Add your first work experiences
           </button>
         </div>
       ) : (
@@ -108,6 +79,8 @@ const ExperienceForm = ({ data, onChange }) => {
                   <label className="block text-xs font-medium text-gray-700 mb-1">Position / Job Title</label>
                   <input
                     type="text"
+                    spellCheck="true"
+                    lang="en"
                     value={exp.position || exp.job_title || ''}
                     onChange={(e) => {
                       updateExperience(index, 'position', e.target.value);
@@ -164,22 +137,7 @@ const ExperienceForm = ({ data, onChange }) => {
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-medium text-gray-700">Responsibilities & Achievements</label>
-                  <button
-                    type="button"
-                    disabled={generatingIndex === index}
-                    onClick={() => generateDescription(index)}
-                    className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium bg-purple-50 text-purple-700 hover:bg-purple-100 rounded transition-colors disabled:opacity-50 cursor-pointer"
-                  >
-                    {generatingIndex === index ? (
-                      <Loader className="size-3 animate-spin" />
-                    ) : (
-                      <Sparkles className="size-3" />
-                    )}
-                    {generatingIndex === index ? 'Enhancing...' : 'AI Enhance'}
-                  </button>
-                </div>
+                <label className="block text-xs font-medium text-gray-700 mb-1.5">Responsibilities & Achievements</label>
                 <RichTextEditor
                   value={exp.description || ''}
                   onChange={(val) => updateExperience(index, 'description', val)}

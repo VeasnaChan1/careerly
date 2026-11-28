@@ -5,13 +5,14 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ============================================================
 // 1. User
 // ============================================================
 model User {
-  id                  String              @id @default(uuid()) @db.Uuid
+  id                  String              @id @default(uuid()) @db.VarChar(36)
   name                String?             @db.VarChar(255)
   email               String              @unique @db.VarChar(255)
   password_hash       String?             @db.Text
@@ -25,12 +26,28 @@ model User {
   @@map("users")
 }
 
+model PasswordReset {
+  email         String   @id @db.VarChar(255)
+  token_digest  String   @unique @db.VarChar(64)
+  expires_at    DateTime
+
+  @@map("password_resets")
+}
+
+model PendingSignup {
+  email         String   @id @db.VarChar(255)
+  token_digest  String   @unique @db.VarChar(64)
+  expires_at    DateTime
+
+  @@map("pending_signups")
+}
+
 // ============================================================
 // 2. Resume
 // ============================================================
 model Resume {
   id                   String              @id @default(uuid()) @db.Uuid
-  user_id              String              @db.Uuid
+  user_id              String             @db.VarChar(36)
   title                String?             @default("Untitled Resume") @db.VarChar(255)
   is_public            Boolean             @default(false)
   public_slug          String?             @unique @db.VarChar(100)
@@ -148,7 +165,7 @@ model Skill {
 // ============================================================
 model Job {
   id                  String              @id @default(uuid()) @db.Uuid
-  user_id             String?             @db.Uuid
+  user_id             String?             @db.VarChar(36)
   title               String              @db.VarChar(255)
   company             String              @db.VarChar(255)
   location            String?             @db.VarChar(255)
@@ -174,7 +191,7 @@ model Job {
 // ============================================================
 model InterviewQuestion {
   id               String   @id @default(uuid()) @db.Uuid
-  user_id          String   @db.Uuid
+  user_id          String?  @db.VarChar(36)
   resume_id        String?  @db.Uuid
   job_id           String?  @db.Uuid
   job_role         String?  @db.VarChar(255)
@@ -184,9 +201,12 @@ model InterviewQuestion {
   suggested_answer String?  @db.Text
   user_answer      String?  @db.Text
   ai_feedback      String?  @db.Text
+  why_asked        String?  @db.Text
+  tips             String?  @db.Text
+  is_practice      Boolean? @default(true)
   created_at       DateTime @default(now())
 
-  user             User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user             User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   resume           Resume?  @relation(fields: [resume_id], references: [id], onDelete: SetNull)
   job              Job?     @relation(fields: [job_id], references: [id], onDelete: SetNull)
 

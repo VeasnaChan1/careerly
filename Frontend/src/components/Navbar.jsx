@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -20,6 +20,24 @@ export default function Navbar() {
         { id: 'features', linkId: 'features' },
         { id: 'pricing', linkId: 'pricing' },
       ];
+
+      // If on jobs page, set active section
+      if (window.location.pathname.startsWith('/jobs')) {
+        setActiveSection('jobs');
+        return;
+      }
+
+      // If on interview guide page, set active section
+      if (window.location.pathname.startsWith('/interview-guide')) {
+        setActiveSection('interview-guide');
+        return;
+      }
+
+      // If on interview page, set active section
+      if (window.location.pathname.startsWith('/interview')) {
+        setActiveSection('interview');
+        return;
+      }
 
       // If at top hero area, reset active section
       if (scrollY < 120) {
@@ -47,10 +65,12 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
+    { label: 'Jobs', href: '/jobs', id: 'jobs', isRoute: true },
+    { label: 'Interview Prep', href: '/interview', id: 'interview', isRoute: true },
+    { label: 'Interview Guide', href: '/interview-guide', id: 'interview-guide', isRoute: true },
     { label: 'Features', href: '/#features', id: 'features' },
     { label: 'How it works', href: '/#how-it-works', id: 'how-it-works' },
     { label: 'Pricing', href: '/#pricing', id: 'pricing' },
-    { label: 'Jobs', to: '/jobs', id: 'jobs' },
   ];
 
   const handleNavClick = (e, targetId) => {
@@ -119,7 +139,7 @@ export default function Navbar() {
           <nav className="hidden md:flex items-center gap-1 sm:gap-1.5 lg:gap-2" aria-label="Main Navigation">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
-              const linkClass = `relative font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#F46200] ${
+              const linkClasses = `relative font-medium rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#F46200] ${
                 isScrolled ? 'text-xs sm:text-sm px-3.5 py-1.5' : 'text-sm px-3.5 py-2'
               } ${
                 isActive
@@ -127,10 +147,20 @@ export default function Navbar() {
                   : 'text-[#5A554E] hover:text-[#F46200] hover:bg-black/[0.04] active:bg-black/[0.07]'
               }`;
 
-              if (link.to) {
+              if (link.isRoute) {
                 return (
-                  <Link key={link.label} to={link.to} className={linkClass}>
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className={linkClasses}
+                  >
                     <span>{link.label}</span>
+                    {isActive && (
+                      <span
+                        className="inline-block w-1.5 h-1.5 rounded-full bg-[#F46200] ml-1.5 align-middle"
+                        aria-hidden="true"
+                      />
+                    )}
                   </Link>
                 );
               }
@@ -140,7 +170,7 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.id)}
-                  className={linkClass}
+                  className={linkClasses}
                 >
                   <span>{link.label}</span>
                   {isActive && (
@@ -163,7 +193,7 @@ export default function Navbar() {
                   isScrolled ? 'px-4 py-2 text-xs sm:text-sm' : 'px-5 py-2.5 text-sm'
                 }`}
               >
-                <span>Go to Dashboard</span>
+                <span>My CVs</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             ) : (
@@ -215,21 +245,22 @@ export default function Navbar() {
           <nav className="flex flex-col space-y-2">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
-              const mobileLinkClass = `text-base font-medium px-3.5 py-2.5 rounded-xl transition-colors flex items-center justify-between ${
+              const linkClasses = `text-base font-medium px-3.5 py-2.5 rounded-xl transition-colors flex items-center justify-between ${
                 isActive
                   ? 'text-[#F46200] font-semibold bg-[#FFF3EB] border border-[#F46200]/20'
                   : 'text-[#2D2D2D] hover:text-[#F46200] hover:bg-black/[0.03]'
               }`;
 
-              if (link.to) {
+              if (link.isRoute) {
                 return (
                   <Link
                     key={link.label}
-                    to={link.to}
+                    to={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={mobileLinkClass}
+                    className={linkClasses}
                   >
                     <span>{link.label}</span>
+                    {isActive && <span className="w-2 h-2 rounded-full bg-[#F46200]"></span>}
                   </Link>
                 );
               }
@@ -239,7 +270,7 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.id)}
-                  className={mobileLinkClass}
+                  className={linkClasses}
                 >
                   <span>{link.label}</span>
                   {isActive && <span className="w-2 h-2 rounded-full bg-[#F46200]"></span>}
@@ -254,7 +285,7 @@ export default function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full inline-flex items-center justify-center py-2.5 rounded-full text-sm font-semibold text-white bg-[#F46200] hover:bg-[#DC5800] transition-colors shadow-xs"
               >
-                Go to Dashboard
+                Go to My CVs
               </Link>
             ) : (
               <>
